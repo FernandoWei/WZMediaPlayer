@@ -10,7 +10,7 @@
 #include <chrono>
 
 std::shared_ptr<IMediaPlayer> IMediaPlayer::createPlayer(const std::string&& url){
-    return std::shared_ptr<IMediaPlayer>(dynamic_cast<IMediaPlayer*>(new CMediaPlayer(std::move(url))));
+    return std::shared_ptr<IMediaPlayer>(new CMediaPlayer(std::move(url)));
 }
 
 CMediaPlayer::CMediaPlayer(const std::string&& url) noexcept
@@ -41,6 +41,8 @@ void CMediaPlayer::start(){
 void CMediaPlayer::prepare(){
     if (!mPrepared){
         init();
+        prepareMediaObjects();
+        prepareTasks();
         mMediaSource->prepare();
         mPrepared = true;
     }
@@ -62,6 +64,24 @@ void CMediaPlayer::pause(){
 
 uint64_t CMediaPlayer::getCurrentPosition(){
     return 0;
+}
+
+void CMediaPlayer::prepareTasks(){
+    mTasks.insert(std::move(std::make_pair(std::string("PreparePacketQueueThread"), [this](){
+        this->preparePacketQueue();
+    })));
+    mTasks.insert(std::move(std::make_pair(std::string("VideoDecoderThread"), [this](){
+        this->mVideoDecoder->start();
+    })));
+    mTasks.insert(std::move(std::make_pair(std::string("AudioDecoderThread"), [this](){
+        this->mAudioDecoder->start();
+    })));
+}
+
+void CMediaPlayer::prepareMediaObjects(){
+    mMediaSource = std::make_shared<MediaSource>(new MediaSource(mUrl));
+    mAudioDecoder = std::make_shared<MediaDecoder>(new AudioDecoder);
+    mVideoDecoder = std::make_shared<MediaDecoder>(new VideoDecoder);
 }
 
 void CMediaPlayer::preparePacketQueue(){
@@ -103,16 +123,6 @@ void CMediaPlayer::enqueuePacket(AVPacket* packet){
 }
 
 void CMediaPlayer::startDecoding(){
-    mTasks.insert(std::move(std::make_pair(std::string("PreparePacketQueueThread"), [this](){
-        this->preparePacketQueue();
-    })));
-    mTasks.insert(std::move(std::make_pair(std::string("VideoDecoderThread"), [this](){
-        this->mVideoDecoder->start();
-    })));
-    mTasks.insert(std::move(std::make_pair(std::string("AudioDecoderThread"), [this](){
-        this->mAudioDecoder->start();
-    })));
-    
     for (auto& task : mTasks){
         mThreadPool.push_back(std::move(std::thread(task.second)));
         mThreadIDs.insert(std::make_pair(task.first, mThreadPool.back().get_id()));

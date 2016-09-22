@@ -9,15 +9,11 @@
 #ifndef MediaDecoder_hpp
 #define MediaDecoder_hpp
 
-extern "C" {
-#include <libavutil/avutil.h>
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-    //#include <libavutil/time.h>
-    //#include <libswresample/swresample.h>
-}
+#include "CommonInclude.h"
 
-#include <stdio.h>
+#include <list>
+
+enum class PlayerState;
 
 class MediaDecoder {
     
@@ -27,7 +23,7 @@ public:
     
 public:
     void enqueuePacket(AVPacket* packet);
-    void dequeuePacket(AVPacket* packet);
+    PlayerState dequeuePacket(AVPacket* packet);
     void start();
     void pause();
     void resume();
@@ -39,7 +35,7 @@ public:
 private:
     bool mPrepared;
     bool mPaused;
-//    std::list<AVPacket> mPacketQueue;
+    std::list<AVPacket> mPacketQueue;
 };
 
 #endif /* MediaDecoder_hpp */

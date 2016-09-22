@@ -14,6 +14,14 @@
 
 class VideoDecoder : public MediaDecoder {
     
+public:
+    VideoDecoder();
+    ~VideoDecoder();
+    
+public:
+    void virtual prepare();
+    void virtual decode(AVPacket* pkt);
+    
 };
 
 #endif /* VideoDecoder_hpp */

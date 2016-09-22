@@ -9,10 +9,28 @@
 #include "MediaDecoder.hpp"
 
 
-MediaDecoder::MediaDecoder(){
+MediaDecoder::MediaDecoder():
+mPrepared(false)
+{
     ;
 }
 
 void MediaDecoder::start(){
-    prepare();
+    if (!mPrepared){
+        prepare();
+    }
+    
+    while (true){
+        AVPacket pkt;
+        while (true){
+            switch (dequeuePacket(&pkt)) {
+                case PlayerState::TRY_AGAIN_LATER:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+    
 }

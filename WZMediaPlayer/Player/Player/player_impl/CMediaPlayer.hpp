@@ -9,28 +9,23 @@
 #ifndef CMediaPlayer_hpp
 #define CMediaPlayer_hpp
 
-extern "C" {
-#include <libavutil/avutil.h>
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-//#include <libavutil/time.h>
-//#include <libswresample/swresample.h>
-}
+
 
 #include "IMediaPlayer.hpp"
 #include "MediaSource.hpp"
 #include "MediaDecoder.hpp"
+#include "AudioDecoder.hpp"
+#include "VideoDecoder.hpp"
+#include "CommonInclude.h"
 #include <thread>
 #include <vector>
 #include <map>
 #include <iostream>
 
-enum class PlayerState {
-    OK,
-    ERROR,
-    END_OF_FILE,
-    TRY_AGAIN_LATER
-};
+class AudioDecoder;
+class VideoDecoder;
+
+
 
 class CMediaPlayer : public IMediaPlayer {
     
@@ -54,6 +49,8 @@ private:
     void prepare();
     void startDecoding();
     void init();
+    void prepareTasks();
+    void prepareMediaObjects();
     void preparePacketQueue();
     void demuxerPacket();
     void enqueuePacket(AVPacket* packet);

@@ -13,7 +13,12 @@
 #include "MediaDecoder.hpp"
 
 class AudioDecoder : public MediaDecoder {
-    ;
+public:
+    AudioDecoder();
+    ~AudioDecoder();
+public:
+    void virtual prepare();
+    void virtual decode(AVPacket* pkt);
 };
 
 #endif /* AudioDecoder_hpp */

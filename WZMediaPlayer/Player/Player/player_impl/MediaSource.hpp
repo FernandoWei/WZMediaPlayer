@@ -17,13 +17,14 @@ extern "C" {
     //#include <libswresample/swresample.h>
 }
 
-#include <stdio.h>
+#include <string>
 
-enum class PlayerState;
+extern enum class PlayerState;
 
 class MediaSource {
 public:
-    MediaSource();
+    MediaSource() = delete;
+    explicit MediaSource(const std::string& url);
     ~MediaSource(){}
     
 public:

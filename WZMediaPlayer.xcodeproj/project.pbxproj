@@ -189,6 +189,7 @@
 		EDCACE3C1D93C78300B4BCC6 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		EDCACE3E1D93C78300B4BCC6 /* WZMediaPlayer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WZMediaPlayer.xcdatamodel; sourceTree = "<group>"; };
 		EDCACE471D93C79A00B4BCC6 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../../Default-568h@2x.png"; sourceTree = "<group>"; };
+		EDCACE491D93E0B000B4BCC6 /* CommonInclude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonInclude.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -499,6 +500,7 @@
 				EDCACE171D93C6B800B4BCC6 /* MediaSource.hpp */,
 				EDCACE181D93C6B800B4BCC6 /* VideoDecoder.cpp */,
 				EDCACE191D93C6B800B4BCC6 /* VideoDecoder.hpp */,
+				EDCACE491D93E0B000B4BCC6 /* CommonInclude.h */,
 			);
 			path = player_impl;
 			sourceTree = "<group>";
