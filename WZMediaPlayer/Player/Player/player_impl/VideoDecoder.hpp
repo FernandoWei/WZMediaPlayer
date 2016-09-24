@@ -21,6 +21,7 @@ public:
 public:
     void virtual prepare();
     PlayerState virtual decode(AVPacket* pkt);
+    void flush();
     
 };
 

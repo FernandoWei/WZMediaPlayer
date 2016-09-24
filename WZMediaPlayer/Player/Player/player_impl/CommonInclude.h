@@ -12,6 +12,9 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include <string>
+#include <vector>
+#include <map>
 
 extern "C" {
 #include <libavutil/avutil.h>
@@ -24,6 +27,7 @@ extern "C" {
 enum class PlayerState {
     OK,
     ERROR,
+    STOPPED,
     END_OF_FILE,
     TRY_AGAIN_LATER
 };

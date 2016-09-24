@@ -13,12 +13,9 @@
 
 #include "IMediaPlayer.hpp"
 #include "MediaSource.hpp"
-//#include "MediaDecoder.hpp"
 #include "AudioDecoder.hpp"
 #include "VideoDecoder.hpp"
 #include "CommonInclude.h"
-#include <vector>
-#include <map>
 
 class AudioDecoder;
 class VideoDecoder;
@@ -47,12 +44,12 @@ private:
 private:
     void prepare();
     void startDecoding();
-    void init();
     void prepareTasks();
     void prepareMediaObjects();
     void preparePacketQueue();
     void demuxerPacket();
     void enqueuePacket(AVPacket* packet);
+    void flush();
     
 private:
     std::map<std::string, std::thread::id> mThreadIDs;
@@ -60,7 +57,7 @@ private:
     std::map<std::string, std::function<void(void)>> mTasks;
     
 private:
-    std::string mUrl;
+    const std::string mUrl;
     bool mPrepared;
     bool mStarted;
     bool mPaused;

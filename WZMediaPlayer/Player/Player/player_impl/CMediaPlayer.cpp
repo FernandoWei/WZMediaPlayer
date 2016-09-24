@@ -39,7 +39,6 @@ void CMediaPlayer::start(){
 
 void CMediaPlayer::prepare(){
     if (!mPrepared){
-        init();
         prepareMediaObjects();
         prepareTasks();
         mMediaSource->prepare();
@@ -49,6 +48,7 @@ void CMediaPlayer::prepare(){
 
 void CMediaPlayer::stop(){
     if (mStarted){
+        mMediaSource->stop();
         mAudioDecoder->stop();
         mVideoDecoder->stop();
         mStarted = false;
@@ -71,6 +71,11 @@ void CMediaPlayer::resume(){
     }
 }
 
+void CMediaPlayer::flush(){
+    mAudioDecoder->flush();
+    mVideoDecoder->flush();
+}
+
 uint64_t CMediaPlayer::getCurrentPosition(){
     return 0;
 }
@@ -88,9 +93,9 @@ void CMediaPlayer::prepareTasks(){
 }
 
 void CMediaPlayer::prepareMediaObjects(){
-    mMediaSource = std::make_shared<MediaSource>(new MediaSource(mUrl));
-    mAudioDecoder = std::make_shared<MediaDecoder>(new AudioDecoder(std::move(std::string("AudioDecoder")), 50, 3));
-    mVideoDecoder = std::make_shared<MediaDecoder>(new VideoDecoder(std::move("VideoDecoder"), 25, 3));
+    mMediaSource = std::shared_ptr<MediaSource>(new MediaSource(mUrl));
+    mAudioDecoder = std::shared_ptr<MediaDecoder>(new AudioDecoder(std::move(std::string("AudioDecoder")), 50, 3));
+    mVideoDecoder = std::shared_ptr<MediaDecoder>(new VideoDecoder(std::move("VideoDecoder"), 25, 3));
 }
 
 void CMediaPlayer::preparePacketQueue(){
@@ -105,6 +110,9 @@ void CMediaPlayer::preparePacketQueue(){
             case PlayerState::END_OF_FILE:{
                 mStreamEnd = true;
                 std::cout << "End of file.\n";
+                break;
+            }
+            case PlayerState::STOPPED:{
                 break;
             }
             default:{
@@ -127,8 +135,6 @@ void CMediaPlayer::enqueuePacket(AVPacket* packet){
         mVideoDecoder->enqueuePacket(packet);
     } else if (packet->stream_index == mMediaSource->getAudioStreamIndex()){
         mAudioDecoder->enqueuePacket(packet);
-    } else {
-        av_packet_unref(packet);
     }
 }
 

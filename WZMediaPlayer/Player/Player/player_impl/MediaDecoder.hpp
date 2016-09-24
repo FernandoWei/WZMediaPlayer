@@ -19,6 +19,7 @@ class MediaDecoder {
     
 public:
     MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData);
+    MediaDecoder() = default;
     MediaDecoder(const MediaDecoder& decoder) = delete;
     MediaDecoder(MediaDecoder&& decoder) noexcept = delete;
     MediaDecoder& operator=(const MediaDecoder& decoder) = delete;
@@ -33,19 +34,21 @@ public:
     void resume();
     
 public:
-    void virtual prepare() = 0;
-    PlayerState virtual decode(AVPacket* pkt) = 0;
+    void virtual prepare();
+    PlayerState virtual decode(AVPacket* pkt);
+    void virtual flush();
     
 private:
     void dequeuePacket(AVPacket* packet);
+    std::shared_ptr<AVPacket> allocatePacket();
     bool isFullBuffered();
     void clearPktQueue();
-    void flush();
     
 private:
     bool mPrepared;
     std::atomic_bool mPaused;
     std::atomic_bool mStopped;
+    std::atomic_bool mIsFlushing;
     bool mFirstBuffered;
     
     std::list<std::shared_ptr<AVPacket>> mPacketQueue;

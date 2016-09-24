@@ -7,3 +7,24 @@
 //
 
 #include "VideoDecoder.hpp"
+
+VideoDecoder::VideoDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData)
+{
+    MediaDecoder::MediaDecoder(std::move(name), firstBufferedPktCount, nonFirstBufferSecondsOfData);
+}
+
+VideoDecoder::~VideoDecoder(){
+    ;
+}
+
+void VideoDecoder::prepare(){
+    ;
+}
+
+PlayerState VideoDecoder::decode(AVPacket* pkt){
+    return PlayerState::OK;
+}
+
+void VideoDecoder::flush(){
+    MediaDecoder::flush();
+}

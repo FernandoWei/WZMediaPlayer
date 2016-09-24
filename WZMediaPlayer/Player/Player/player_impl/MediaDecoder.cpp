@@ -15,27 +15,47 @@ mPaused(false),
 mStopped(false),
 mFirstBuffered(true),
 mName(name),
+mIsFlushing(false),
 mFirstBufferedPktCount(firstBufferedPktCount),
 mNonFirstBufferSecondsOfData(nonFirstBufferSecondsOfData)
 {
+    std::cout << mName << " construct.\n";
     av_init_packet(&mDequeuePacket);
 }
 
 MediaDecoder::~MediaDecoder(){
+    std::cout << mName << " desconstruct.\n";
     clearPktQueue();
 }
 
 void MediaDecoder::clearPktQueue(){
-    for (auto& pktPtr : mPacketQueue){
-        av_packet_unref(pktPtr.get());
-    }
     mPacketQueue.clear();
 }
 
+std::shared_ptr<AVPacket> MediaDecoder::allocatePacket(){
+    try {
+        return std::shared_ptr<AVPacket>(new AVPacket, [](AVPacket* pkt){
+            if (pkt){
+                av_packet_unref(pkt);
+                delete pkt;
+                pkt = nullptr;
+            }
+        });
+    } catch (const std::bad_alloc& e) {
+        std::cout << "Failed to allocate AVPacket.\n";
+        return nullptr;
+    }
+}
+
 void MediaDecoder::enqueuePacket(const AVPacket* pkt){
-    auto packetPtr = std::make_shared<AVPacket>();
-    av_copy_packet(packetPtr.get(), pkt);
-    mPacketQueue.push_back(packetPtr);
+    if (!mIsFlushing){
+        auto packetPtr = allocatePacket();
+        if (packetPtr){
+            av_copy_packet(packetPtr.get(), pkt);
+            mPacketQueue.push_back(packetPtr);
+            std::cout << mName << " buffered " << mPacketQueue.size() << " packets.\n";
+        }
+    }
 }
 
 void MediaDecoder::dequeuePacket(AVPacket* pkt){
@@ -65,7 +85,7 @@ void MediaDecoder::start(){
     
     std::chrono::duration<int, std::milli> duration(20);
     while (!mStopped){
-        if (mPaused || !isFullBuffered()){
+        if (mPaused || !isFullBuffered() || mIsFlushing){
             std::this_thread::sleep_for(duration);
             continue;
         }
@@ -108,3 +128,23 @@ void MediaDecoder::resume(){
         std::cout << mName << " resumed.\n";
     }
 }
+
+void MediaDecoder::flush(){
+    if (!mIsFlushing){
+        std::cout << mName << " flushed.\n";
+        mIsFlushing = true;
+        clearPktQueue();
+        mIsFlushing = false;
+    }
+}
+
+PlayerState MediaDecoder::decode(AVPacket* pkt){
+    return PlayerState::OK;
+}
+
+void MediaDecoder::prepare(){
+}
+
+
+
+
