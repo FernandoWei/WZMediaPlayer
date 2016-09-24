@@ -13,14 +13,12 @@
 
 #include "IMediaPlayer.hpp"
 #include "MediaSource.hpp"
-#include "MediaDecoder.hpp"
+//#include "MediaDecoder.hpp"
 #include "AudioDecoder.hpp"
 #include "VideoDecoder.hpp"
 #include "CommonInclude.h"
-#include <thread>
 #include <vector>
 #include <map>
-#include <iostream>
 
 class AudioDecoder;
 class VideoDecoder;
@@ -41,8 +39,9 @@ private:
     
 private:
     void virtual start();
-    void virtual pause();
     void virtual stop();
+    void virtual pause();
+    void virtual resume();
     uint64_t virtual getCurrentPosition();
     
 private:
@@ -65,7 +64,6 @@ private:
     bool mPrepared;
     bool mStarted;
     bool mPaused;
-    bool mFirstBuffering;
     bool mStreamEnd;
     
     std::shared_ptr<MediaSource> mMediaSource;

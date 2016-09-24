@@ -18,24 +18,42 @@ enum class PlayerState;
 class MediaDecoder {
     
 public:
-    MediaDecoder();
-    ~MediaDecoder(){}
+    MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData);
+    MediaDecoder(const MediaDecoder& decoder) = delete;
+    MediaDecoder(MediaDecoder&& decoder) noexcept = delete;
+    MediaDecoder& operator=(const MediaDecoder& decoder) = delete;
+    MediaDecoder& operator=(MediaDecoder&& decoder) noexcept = delete;
+    ~MediaDecoder();
     
 public:
-    void enqueuePacket(AVPacket* packet);
-    PlayerState dequeuePacket(AVPacket* packet);
+    void enqueuePacket(const AVPacket* packet);
     void start();
+    void stop();
     void pause();
     void resume();
     
 public:
     void virtual prepare() = 0;
-    void virtual decode(AVPacket* pkt) = 0;
+    PlayerState virtual decode(AVPacket* pkt) = 0;
+    
+private:
+    void dequeuePacket(AVPacket* packet);
+    bool isFullBuffered();
+    void clearPktQueue();
+    void flush();
     
 private:
     bool mPrepared;
-    bool mPaused;
-    std::list<AVPacket> mPacketQueue;
+    std::atomic_bool mPaused;
+    std::atomic_bool mStopped;
+    bool mFirstBuffered;
+    
+    std::list<std::shared_ptr<AVPacket>> mPacketQueue;
+    std::string mName;
+    AVPacket mDequeuePacket;
+    
+    uint8_t mFirstBufferedPktCount;
+    uint8_t mNonFirstBufferSecondsOfData;
 };
 
 #endif /* MediaDecoder_hpp */

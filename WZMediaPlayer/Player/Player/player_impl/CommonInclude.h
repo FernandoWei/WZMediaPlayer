@@ -9,6 +9,10 @@
 #ifndef CommonInclude_h
 #define CommonInclude_h
 
+#include <chrono>
+#include <thread>
+#include <iostream>
+
 extern "C" {
 #include <libavutil/avutil.h>
 #include <libavcodec/avcodec.h>

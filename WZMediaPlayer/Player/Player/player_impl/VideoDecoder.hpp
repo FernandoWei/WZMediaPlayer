@@ -15,12 +15,12 @@
 class VideoDecoder : public MediaDecoder {
     
 public:
-    VideoDecoder();
+    VideoDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData);
     ~VideoDecoder();
     
 public:
     void virtual prepare();
-    void virtual decode(AVPacket* pkt);
+    PlayerState virtual decode(AVPacket* pkt);
     
 };
 

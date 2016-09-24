@@ -27,6 +27,7 @@ public:
     void virtual start() = 0;
     void virtual pause() = 0;
     void virtual stop() = 0;
+    void virtual resume() = 0;
     uint64_t virtual getCurrentPosition() = 0;
     
 public:

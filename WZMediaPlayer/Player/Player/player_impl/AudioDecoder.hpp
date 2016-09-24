@@ -14,11 +14,11 @@
 
 class AudioDecoder : public MediaDecoder {
 public:
-    AudioDecoder();
+    AudioDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData);
     ~AudioDecoder();
 public:
     void virtual prepare();
-    void virtual decode(AVPacket* pkt);
+    PlayerState virtual decode(AVPacket* pkt);
 };
 
 #endif /* AudioDecoder_hpp */

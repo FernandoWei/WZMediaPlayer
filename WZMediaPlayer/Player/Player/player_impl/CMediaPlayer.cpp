@@ -7,7 +7,7 @@
 //
 
 #include "CMediaPlayer.hpp"
-#include <chrono>
+
 
 std::shared_ptr<IMediaPlayer> IMediaPlayer::createPlayer(const std::string&& url){
     return std::shared_ptr<IMediaPlayer>(new CMediaPlayer(std::move(url)));
@@ -18,7 +18,6 @@ CMediaPlayer::CMediaPlayer(const std::string&& url) noexcept
 mPrepared(false),
 mStarted(false),
 mPaused(false),
-mFirstBuffering(true),
 mStreamEnd(false)
 {
     ;
@@ -50,15 +49,25 @@ void CMediaPlayer::prepare(){
 
 void CMediaPlayer::stop(){
     if (mStarted){
+        mAudioDecoder->stop();
+        mVideoDecoder->stop();
         mStarted = false;
     }
 }
 
 void CMediaPlayer::pause(){
-    if (!mPaused){
+    if (mStarted && !mPaused){
         mAudioDecoder->pause();
         mVideoDecoder->pause();
         mPaused = true;
+    }
+}
+
+void CMediaPlayer::resume(){
+    if (mStarted && mPaused){
+        mAudioDecoder->resume();
+        mVideoDecoder->resume();
+        mPaused = false;
     }
 }
 
@@ -80,8 +89,8 @@ void CMediaPlayer::prepareTasks(){
 
 void CMediaPlayer::prepareMediaObjects(){
     mMediaSource = std::make_shared<MediaSource>(new MediaSource(mUrl));
-    mAudioDecoder = std::make_shared<MediaDecoder>(new AudioDecoder);
-    mVideoDecoder = std::make_shared<MediaDecoder>(new VideoDecoder);
+    mAudioDecoder = std::make_shared<MediaDecoder>(new AudioDecoder(std::move(std::string("AudioDecoder")), 50, 3));
+    mVideoDecoder = std::make_shared<MediaDecoder>(new VideoDecoder(std::move("VideoDecoder"), 25, 3));
 }
 
 void CMediaPlayer::preparePacketQueue(){
@@ -100,6 +109,7 @@ void CMediaPlayer::preparePacketQueue(){
             }
             default:{
                 enqueuePacket(&packet);
+                av_packet_unref(&packet);
                 break;
             }
         }
