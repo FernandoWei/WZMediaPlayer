@@ -11,14 +11,12 @@
 
 #include "CommonInclude.h"
 
-#include <list>
-
 enum class PlayerState;
 
 class MediaDecoder {
     
 public:
-    MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData);
+    MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream);
     MediaDecoder() = default;
     MediaDecoder(const MediaDecoder& decoder) = delete;
     MediaDecoder(MediaDecoder&& decoder) noexcept = delete;
@@ -43,6 +41,9 @@ private:
     std::shared_ptr<AVPacket> allocatePacket();
     bool isFullBuffered();
     void clearPktQueue();
+    
+protected:
+    AVStream* mMediaStream;
     
 private:
     bool mPrepared;

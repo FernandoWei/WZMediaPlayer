@@ -22,21 +22,27 @@ public:
     ~MediaSource();
     
 public:
-    void prepare();
+    PlayerState prepare();
     void stop();
     PlayerState read(AVPacket* packet);
     int getVideoStreamIndex();
     int getAudioStreamIndex();
+    AVStream* getAudioStream();
+    AVStream* getVideoStream();
     
     
 private:
     void init();
-    void open();
+    PlayerState open();
     void close();
+    
+    static int didStopped(void* thiz);
     
 private:
     int mVideoStreamIndex;
     int mAudioStreamIndex;
+    AVStream* mVideoStream;
+    AVStream* mAudioStream;
     AVFormatContext* mFormatCtx;
     
     std::string mUrl;

@@ -9,7 +9,7 @@
 #include "MediaDecoder.hpp"
 
 
-MediaDecoder::MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData):
+MediaDecoder::MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream):
 mPrepared(false),
 mPaused(false),
 mStopped(false),
@@ -17,7 +17,8 @@ mFirstBuffered(true),
 mName(name),
 mIsFlushing(false),
 mFirstBufferedPktCount(firstBufferedPktCount),
-mNonFirstBufferSecondsOfData(nonFirstBufferSecondsOfData)
+mNonFirstBufferSecondsOfData(nonFirstBufferSecondsOfData),
+mMediaStream(stream)
 {
     std::cout << mName << " construct.\n";
     av_init_packet(&mDequeuePacket);
@@ -83,7 +84,7 @@ void MediaDecoder::start(){
         prepare();
     }
     
-    std::chrono::duration<int, std::milli> duration(20);
+    std::chrono::duration<int, std::milli> duration(NUM_TWENTY);
     while (!mStopped){
         if (mPaused || !isFullBuffered() || mIsFlushing){
             std::this_thread::sleep_for(duration);

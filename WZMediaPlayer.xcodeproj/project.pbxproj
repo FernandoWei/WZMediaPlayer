@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DFAA9BCA1DA210B600E6A8B9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA9BC91DA210B600E6A8B9 /* CoreMedia.framework */; };
+		DFAA9BCC1DA210C000E6A8B9 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA9BCB1DA210C000E6A8B9 /* CoreFoundation.framework */; };
+		DFC1F5811D9E2CC100BED5CD /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFC1F5801D9E2CC100BED5CD /* VideoToolbox.framework */; };
 		EDCACC3B1D9375BE00B4BCC6 /* WZMediaPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCACC3A1D9375BE00B4BCC6 /* WZMediaPlayerTests.m */; };
 		EDCACC461D9375BE00B4BCC6 /* WZMediaPlayerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCACC451D9375BE00B4BCC6 /* WZMediaPlayerUITests.m */; };
 		EDCACE1B1D93C6B800B4BCC6 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDCACD971D93C6B800B4BCC6 /* libavcodec.a */; };
@@ -49,6 +52,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DFAA9BC91DA210B600E6A8B9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		DFAA9BCB1DA210C000E6A8B9 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		DFC1F5801D9E2CC100BED5CD /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		EDCACC1A1D9375BE00B4BCC6 /* WZMediaPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WZMediaPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDCACC361D9375BE00B4BCC6 /* WZMediaPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WZMediaPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDCACC3A1D9375BE00B4BCC6 /* WZMediaPlayerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WZMediaPlayerTests.m; sourceTree = "<group>"; };
@@ -195,6 +201,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DFAA9BCC1DA210C000E6A8B9 /* CoreFoundation.framework in Frameworks */,
+				DFAA9BCA1DA210B600E6A8B9 /* CoreMedia.framework in Frameworks */,
+				DFC1F5811D9E2CC100BED5CD /* VideoToolbox.framework in Frameworks */,
 				EDCACE1F1D93C6B800B4BCC6 /* libavutil.a in Frameworks */,
 				EDCACE211D93C6B800B4BCC6 /* libswscale.a in Frameworks */,
 				EDCACE1D1D93C6B800B4BCC6 /* libavfilter.a in Frameworks */,
@@ -222,6 +231,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DFC1F5821D9E2CD600BED5CD /* framework */ = {
+			isa = PBXGroup;
+			children = (
+				DFAA9BC91DA210B600E6A8B9 /* CoreMedia.framework */,
+				DFAA9BCB1DA210C000E6A8B9 /* CoreFoundation.framework */,
+				DFC1F5801D9E2CC100BED5CD /* VideoToolbox.framework */,
+			);
+			name = framework;
+			path = ../../..;
+			sourceTree = "<group>";
+		};
 		EDCACC111D9375BE00B4BCC6 = {
 			isa = PBXGroup;
 			children = (
@@ -289,6 +309,7 @@
 			isa = PBXGroup;
 			children = (
 				EDCACE0E1D93C6B800B4BCC6 /* player_impl */,
+				DFC1F5821D9E2CD600BED5CD /* framework */,
 				EDCACD961D93C6B800B4BCC6 /* 3rdlib */,
 				EDCACD9E1D93C6B800B4BCC6 /* include */,
 				EDCACE1A1D93C6B800B4BCC6 /* player_oc_wrapper */,

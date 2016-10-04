@@ -42,11 +42,12 @@ private:
     uint64_t virtual getCurrentPosition();
     
 private:
-    void prepare();
+    PlayerState prepare();
     void startDecoding();
-    void prepareTasks();
-    void prepareMediaObjects();
-    void preparePacketQueue();
+    PlayerState prepareTasks();
+    PlayerState prepareMediaSource();
+    PlayerState prepareMediaDecoder();
+    void readAndEnqueuePacket();
     void demuxerPacket();
     void enqueuePacket(AVPacket* packet);
     void flush();

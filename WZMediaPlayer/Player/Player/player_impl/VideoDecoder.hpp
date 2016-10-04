@@ -9,13 +9,13 @@
 #ifndef VideoDecoder_hpp
 #define VideoDecoder_hpp
 
-#include <stdio.h>
 #include "MediaDecoder.hpp"
+#include <videotoolbox/VideoToolbox.h>
 
 class VideoDecoder : public MediaDecoder {
     
 public:
-    VideoDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData);
+    VideoDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream);
     ~VideoDecoder();
     
 public:
@@ -23,6 +23,19 @@ public:
     PlayerState virtual decode(AVPacket* pkt);
     void flush();
     
+private:
+    void prepareHWDecoder();
+    void prepareCodecData();
+    void resetHWDecoder();
+    void duplicatePacket();
+    void synchronize();
+    
+private:
+    std::vector<uint8_t> mSPS;
+    std::vector<uint8_t> mPPS;
+    
+    VTDecompressionSessionRef mDecoderSession;
+    CVPixelBufferRef mPixelBuffer;
 };
 
 #endif /* VideoDecoder_hpp */

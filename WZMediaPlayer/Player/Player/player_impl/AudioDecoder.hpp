@@ -13,7 +13,7 @@
 
 class AudioDecoder : public MediaDecoder {
 public:
-    AudioDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData);
+    AudioDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream);
     ~AudioDecoder();
     
 protected:
