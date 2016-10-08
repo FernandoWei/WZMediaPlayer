@@ -17,7 +17,7 @@ public:
     ~AudioDecoder();
     
 protected:
-    void virtual prepare();
+    bool virtual prepare();
     PlayerState virtual decode(AVPacket* pkt);
     void virtual flush();
     

@@ -26,7 +26,7 @@ class CMediaPlayer : public IMediaPlayer {
     
 public:
     virtual ~CMediaPlayer();
-    CMediaPlayer(const std::string&& url) noexcept;
+    CMediaPlayer(std::string&& url) noexcept;
     
 private:
     CMediaPlayer(CMediaPlayer& player) = delete;

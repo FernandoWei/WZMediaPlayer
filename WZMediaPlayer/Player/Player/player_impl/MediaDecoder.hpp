@@ -32,7 +32,7 @@ public:
     void resume();
     
 public:
-    void virtual prepare();
+    bool virtual prepare();
     PlayerState virtual decode(AVPacket* pkt);
     void virtual flush();
     

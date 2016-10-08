@@ -81,7 +81,11 @@ bool MediaDecoder::isFullBuffered(){
 
 void MediaDecoder::start(){
     if (!mPrepared){
-        prepare();
+        if (prepare()){
+            mPrepared = true;
+        } else {
+            return;
+        }
     }
     
     std::chrono::duration<int, std::milli> duration(NUM_TWENTY);
@@ -143,7 +147,7 @@ PlayerState MediaDecoder::decode(AVPacket* pkt){
     return PlayerState::OK;
 }
 
-void MediaDecoder::prepare(){
+bool MediaDecoder::prepare(){
 }
 
 

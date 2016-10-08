@@ -9,11 +9,11 @@
 #include "CMediaPlayer.hpp"
 
 
-std::shared_ptr<IMediaPlayer> IMediaPlayer::createPlayer(const std::string&& url){
+std::shared_ptr<IMediaPlayer> IMediaPlayer::createPlayer(std::string&& url){
     return std::shared_ptr<IMediaPlayer>(new CMediaPlayer(std::move(url)));
 }
 
-CMediaPlayer::CMediaPlayer(const std::string&& url) noexcept
+CMediaPlayer::CMediaPlayer(std::string&& url) noexcept
 :mUrl(url),
 mPrepared(false),
 mStarted(false),

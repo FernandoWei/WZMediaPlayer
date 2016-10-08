@@ -615,6 +615,7 @@
 				TargetAttributes = {
 					EDCACC191D9375BE00B4BCC6 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = 4UEB845J94;
 					};
 					EDCACC351D9375BE00B4BCC6 = {
 						CreatedOnToolsVersion = 7.3;
@@ -830,6 +831,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 4UEB845J94;
 				FRAMEWORK_SEARCH_PATHS = "${PROJECT_DIR}/WZMediaPlayer/Player/Player/3rdlib";
 				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/WZMediaPlayer/Player/Player/include/ffmpeg";
 				INFOPLIST_FILE = WZMediaPlayer/Info.plist;
@@ -849,6 +851,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 4UEB845J94;
 				FRAMEWORK_SEARCH_PATHS = "${PROJECT_DIR}/WZMediaPlayer/Player/Player/3rdlib";
 				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/WZMediaPlayer/Player/Player/include/ffmpeg";
 				INFOPLIST_FILE = WZMediaPlayer/Info.plist;

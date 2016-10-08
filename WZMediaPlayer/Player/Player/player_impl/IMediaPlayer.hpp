@@ -31,7 +31,7 @@ public:
     uint64_t virtual getCurrentPosition() = 0;
     
 public:
-    static std::shared_ptr<IMediaPlayer> createPlayer(const std::string&& url);
+    static std::shared_ptr<IMediaPlayer> createPlayer(std::string&& url);
 };
 
 #endif /* MediaPlayer_hpp */

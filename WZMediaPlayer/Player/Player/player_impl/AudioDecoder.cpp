@@ -17,7 +17,7 @@ AudioDecoder::~AudioDecoder(){
     ;
 }
 
-void AudioDecoder::prepare(){
+bool AudioDecoder::prepare(){
     ;
 }
 
