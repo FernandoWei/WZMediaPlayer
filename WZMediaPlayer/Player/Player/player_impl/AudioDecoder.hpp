@@ -9,16 +9,18 @@
 #ifndef AudioDecoder_hpp
 #define AudioDecoder_hpp
 
-#include <stdio.h>
 #include "MediaDecoder.hpp"
 
 class AudioDecoder : public MediaDecoder {
 public:
-    AudioDecoder();
+    AudioDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream);
     ~AudioDecoder();
-public:
+    
+protected:
     void virtual prepare();
-    void virtual decode(AVPacket* pkt);
+    PlayerState virtual decode(AVPacket* pkt);
+    void virtual flush();
+    
 };
 
 #endif /* AudioDecoder_hpp */

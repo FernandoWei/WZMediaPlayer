@@ -9,39 +9,44 @@
 #ifndef MediaSource_hpp
 #define MediaSource_hpp
 
-extern "C" {
-#include <libavutil/avutil.h>
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-    //#include <libavutil/time.h>
-    //#include <libswresample/swresample.h>
-}
-
-#include <string>
-
-extern enum class PlayerState;
+#include "CommonInclude.h"
 
 class MediaSource {
 public:
     MediaSource() = delete;
+    MediaSource(const MediaSource& source) = delete;
+    MediaSource(MediaSource&& source) = delete;
+    MediaSource& operator=(const MediaSource& source) = delete;
+    MediaSource& operator=(MediaSource&& source) = delete;
     explicit MediaSource(const std::string& url);
-    ~MediaSource(){}
+    ~MediaSource();
     
 public:
-    void prepare();
+    PlayerState prepare();
+    void stop();
     PlayerState read(AVPacket* packet);
     int getVideoStreamIndex();
     int getAudioStreamIndex();
+    AVStream* getAudioStream();
+    AVStream* getVideoStream();
     
     
 private:
-    void open();
+    void init();
+    PlayerState open();
+    void close();
+    
+    static int didStopped(void* thiz);
     
 private:
     int mVideoStreamIndex;
     int mAudioStreamIndex;
+    AVStream* mVideoStream;
+    AVStream* mAudioStream;
+    AVFormatContext* mFormatCtx;
     
-    
+    std::string mUrl;
+    std::atomic_bool mStopped;
     
     
 };

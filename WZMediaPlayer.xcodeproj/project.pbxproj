@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DFAA9BCA1DA210B600E6A8B9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA9BC91DA210B600E6A8B9 /* CoreMedia.framework */; };
+		DFAA9BCC1DA210C000E6A8B9 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA9BCB1DA210C000E6A8B9 /* CoreFoundation.framework */; };
+		DFC1F5811D9E2CC100BED5CD /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFC1F5801D9E2CC100BED5CD /* VideoToolbox.framework */; };
 		EDCACC3B1D9375BE00B4BCC6 /* WZMediaPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCACC3A1D9375BE00B4BCC6 /* WZMediaPlayerTests.m */; };
 		EDCACC461D9375BE00B4BCC6 /* WZMediaPlayerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCACC451D9375BE00B4BCC6 /* WZMediaPlayerUITests.m */; };
 		EDCACE1B1D93C6B800B4BCC6 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDCACD971D93C6B800B4BCC6 /* libavcodec.a */; };
@@ -25,7 +28,6 @@
 		EDCACE401D93C78300B4BCC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDCACE341D93C78300B4BCC6 /* Assets.xcassets */; };
 		EDCACE411D93C78300B4BCC6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDCACE351D93C78300B4BCC6 /* LaunchScreen.storyboard */; };
 		EDCACE421D93C78300B4BCC6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDCACE371D93C78300B4BCC6 /* Main.storyboard */; };
-		EDCACE431D93C78300B4BCC6 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EDCACE391D93C78300B4BCC6 /* Info.plist */; };
 		EDCACE441D93C78300B4BCC6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCACE3A1D93C78300B4BCC6 /* main.m */; };
 		EDCACE451D93C78300B4BCC6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCACE3C1D93C78300B4BCC6 /* ViewController.m */; };
 		EDCACE461D93C78300B4BCC6 /* WZMediaPlayer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EDCACE3D1D93C78300B4BCC6 /* WZMediaPlayer.xcdatamodeld */; };
@@ -50,6 +52,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DFAA9BC91DA210B600E6A8B9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		DFAA9BCB1DA210C000E6A8B9 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		DFC1F5801D9E2CC100BED5CD /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		EDCACC1A1D9375BE00B4BCC6 /* WZMediaPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WZMediaPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDCACC361D9375BE00B4BCC6 /* WZMediaPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WZMediaPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDCACC3A1D9375BE00B4BCC6 /* WZMediaPlayerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WZMediaPlayerTests.m; sourceTree = "<group>"; };
@@ -183,7 +188,6 @@
 		EDCACE341D93C78300B4BCC6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EDCACE361D93C78300B4BCC6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EDCACE381D93C78300B4BCC6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		EDCACE391D93C78300B4BCC6 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EDCACE3A1D93C78300B4BCC6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		EDCACE3B1D93C78300B4BCC6 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		EDCACE3C1D93C78300B4BCC6 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
@@ -197,6 +201,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DFAA9BCC1DA210C000E6A8B9 /* CoreFoundation.framework in Frameworks */,
+				DFAA9BCA1DA210B600E6A8B9 /* CoreMedia.framework in Frameworks */,
+				DFC1F5811D9E2CC100BED5CD /* VideoToolbox.framework in Frameworks */,
 				EDCACE1F1D93C6B800B4BCC6 /* libavutil.a in Frameworks */,
 				EDCACE211D93C6B800B4BCC6 /* libswscale.a in Frameworks */,
 				EDCACE1D1D93C6B800B4BCC6 /* libavfilter.a in Frameworks */,
@@ -224,6 +231,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DFC1F5821D9E2CD600BED5CD /* framework */ = {
+			isa = PBXGroup;
+			children = (
+				DFAA9BC91DA210B600E6A8B9 /* CoreMedia.framework */,
+				DFAA9BCB1DA210C000E6A8B9 /* CoreFoundation.framework */,
+				DFC1F5801D9E2CC100BED5CD /* VideoToolbox.framework */,
+			);
+			name = framework;
+			path = ../../..;
+			sourceTree = "<group>";
+		};
 		EDCACC111D9375BE00B4BCC6 = {
 			isa = PBXGroup;
 			children = (
@@ -291,6 +309,7 @@
 			isa = PBXGroup;
 			children = (
 				EDCACE0E1D93C6B800B4BCC6 /* player_impl */,
+				DFC1F5821D9E2CD600BED5CD /* framework */,
 				EDCACD961D93C6B800B4BCC6 /* 3rdlib */,
 				EDCACD9E1D93C6B800B4BCC6 /* include */,
 				EDCACE1A1D93C6B800B4BCC6 /* player_oc_wrapper */,
@@ -523,7 +542,6 @@
 				EDCACE341D93C78300B4BCC6 /* Assets.xcassets */,
 				EDCACE351D93C78300B4BCC6 /* LaunchScreen.storyboard */,
 				EDCACE371D93C78300B4BCC6 /* Main.storyboard */,
-				EDCACE391D93C78300B4BCC6 /* Info.plist */,
 				EDCACE3A1D93C78300B4BCC6 /* main.m */,
 				EDCACE3D1D93C78300B4BCC6 /* WZMediaPlayer.xcdatamodeld */,
 			);
@@ -633,7 +651,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EDCACE431D93C78300B4BCC6 /* Info.plist in Resources */,
 				EDCACE421D93C78300B4BCC6 /* Main.storyboard in Resources */,
 				EDCACE401D93C78300B4BCC6 /* Assets.xcassets in Resources */,
 				EDCACE481D93C79A00B4BCC6 /* Default-568h@2x.png in Resources */,
@@ -912,6 +929,7 @@
 				EDCACC4C1D9375BE00B4BCC6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EDCACC4D1D9375BE00B4BCC6 /* Build configuration list for PBXNativeTarget "WZMediaPlayerTests" */ = {
 			isa = XCConfigurationList;
@@ -920,6 +938,7 @@
 				EDCACC4F1D9375BE00B4BCC6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EDCACC501D9375BE00B4BCC6 /* Build configuration list for PBXNativeTarget "WZMediaPlayerUITests" */ = {
 			isa = XCConfigurationList;
@@ -928,6 +947,7 @@
 				EDCACC521D9375BE00B4BCC6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

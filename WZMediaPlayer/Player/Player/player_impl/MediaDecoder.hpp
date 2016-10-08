@@ -11,31 +11,53 @@
 
 #include "CommonInclude.h"
 
-#include <list>
-
 enum class PlayerState;
 
 class MediaDecoder {
     
 public:
-    MediaDecoder();
-    ~MediaDecoder(){}
+    MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream);
+    MediaDecoder() = default;
+    MediaDecoder(const MediaDecoder& decoder) = delete;
+    MediaDecoder(MediaDecoder&& decoder) noexcept = delete;
+    MediaDecoder& operator=(const MediaDecoder& decoder) = delete;
+    MediaDecoder& operator=(MediaDecoder&& decoder) noexcept = delete;
+    ~MediaDecoder();
     
 public:
-    void enqueuePacket(AVPacket* packet);
-    PlayerState dequeuePacket(AVPacket* packet);
+    void enqueuePacket(const AVPacket* packet);
     void start();
+    void stop();
     void pause();
     void resume();
     
 public:
-    void virtual prepare() = 0;
-    void virtual decode(AVPacket* pkt) = 0;
+    void virtual prepare();
+    PlayerState virtual decode(AVPacket* pkt);
+    void virtual flush();
+    
+private:
+    void dequeuePacket(AVPacket* packet);
+    std::shared_ptr<AVPacket> allocatePacket();
+    bool isFullBuffered();
+    void clearPktQueue();
+    
+protected:
+    AVStream* mMediaStream;
     
 private:
     bool mPrepared;
-    bool mPaused;
-    std::list<AVPacket> mPacketQueue;
+    std::atomic_bool mPaused;
+    std::atomic_bool mStopped;
+    std::atomic_bool mIsFlushing;
+    bool mFirstBuffered;
+    
+    std::list<std::shared_ptr<AVPacket>> mPacketQueue;
+    std::string mName;
+    AVPacket mDequeuePacket;
+    
+    uint8_t mFirstBufferedPktCount;
+    uint8_t mNonFirstBufferSecondsOfData;
 };
 
 #endif /* MediaDecoder_hpp */
