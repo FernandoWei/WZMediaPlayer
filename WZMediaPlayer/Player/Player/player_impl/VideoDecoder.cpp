@@ -157,7 +157,7 @@ void VideoDecoder::didDecompress(
                                  VTDecodeInfoFlags infoFlags,
                                  CVImageBufferRef pixelBuffer,
                                  CMTime presentationTimeStamp,
-                                 CMTime presentationDuration )
+                                 CMTime presentationDuration)
 {
     if (noErr != status) {
         return;
@@ -383,9 +383,9 @@ PlayerState VideoDecoder::enqueueImage(){
     PlayerState result = PlayerState::OK;
     if (!mPixelBuffer){
         if (mDecodeFrameFlags == kVTDecodeFrame_DoNotOutputFrame){
-            std::cout << "Decoder discarded current frame." << std::endl;
+            std::cout << "Decoder discarded current frame.\n" ;
         }else{
-            std::cout << "Empty pixelBuffer after decoded! Just ignore it!" << std::endl;
+            std::cout << "Empty pixelBuffer after decoded! Just ignore it!\n";
             return PlayerState::IGNORE;
         }
     }

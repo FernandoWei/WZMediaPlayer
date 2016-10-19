@@ -32,6 +32,18 @@ extern "C" {
 #define VIDEO_PKT_COUNT_PER_SECOND (25)
 #define AUDIO_PKT_COUNT_PER_SECOND (50)
 
+#define checkError(err, info) \
+if (noErr != err){ \
+std::cout << info << " failed with error: " << static_cast<int>(err) << std::endl; \
+return; \
+} \
+
+#define checkErrorWithReturn(err, info, result) \
+if (noErr != err){ \
+std::cout << info << " failed with error: " << static_cast<int>(err) << std::endl; \
+return result; \
+} \
+
 enum class PlayerState {
     OK,
     ERROR,
