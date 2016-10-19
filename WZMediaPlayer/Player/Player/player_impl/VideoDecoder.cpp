@@ -14,7 +14,10 @@ VideoDecoder::VideoDecoder(std::string&& name, uint8_t firstBufferedPktCount, ui
 }
 
 VideoDecoder::~VideoDecoder(){
-    ;
+    if (mPixelBuffer){
+        CFRelease(mPixelBuffer);
+        mPixelBuffer = nullptr;
+    }
 }
 
 bool VideoDecoder::prepare(){
@@ -87,7 +90,7 @@ bool VideoDecoder::initDecoder()
         return true;
     }
     
-    if (mSPS.size() == 0 || mPPS.size() == 0){
+    if (!mSPS.size() || !mPPS.size()){
         return false;
     }
     
@@ -123,7 +126,6 @@ bool VideoDecoder::initDecoder()
         }
     }else{
     }
-    
     return true;
 }
 
@@ -165,39 +167,246 @@ void VideoDecoder::didDecompress(
 }
 
 PlayerState VideoDecoder::decode(AVPacket* pkt){
-    PlayerState result = PlayerState::ERROR;
-    if (pkt){
-        result = decodeVideoPkt(pkt);
-    } else {
-        ;
+    PlayerState result = PlayerState::OK;
+    if (!pkt || !(pkt->data) || pkt->size < 4){
+        return PlayerState::ERROR;
+    }
+    if (!duplicatePacket(pkt)){
+        return PlayerState::ERROR;
+    }
+    if (mNeedRedecodeDuplicatedPkt){
+        return redecodeDuplicatedVideoPkt();
+    }
+    
+    if (mPktInfoArrayEnd > 0){
+        mPktInfo = &mPktInfoArray[mPktInfoArrayEnd - 1];
+        result = createImage();
+        if (result == PlayerState::OK){
+            result = enqueueImage();
+            if (result == PlayerState::OK){
+                result = renderImage();
+            }
+        }
     }
     return result;
 }
 
-PlayerState VideoDecoder:: decodeVideoPkt(AVPacket* pkt){
-    if (!pkt || !(pkt->data) || pkt->size < 4){
-        return PlayerState::ERROR;
+PlayerState VideoDecoder::renderImage(){
+    if (!mImageMap.empty()){
+//        getState()->synchronize(nullptr, (int)getCurrentPTS(), this, this, MediaDecoder::synchronizeWait, getBufferedPosition());
+        auto pixelBuffer = mImageMap.begin()->second->pixelBuff;
+        if (pixelBuffer){
+            auto picture = (CVPixelBufferRef)CFRetain(pixelBuffer);
+//            iOSNativeWindow_dispatchPixelBuffer((void*)picture);
+        }
+        mImageMap.erase(mImageMap.begin());
     }
-    if (!duplicatePacket()){
-        return PlayerState::ERROR;
+    return PlayerState::OK;
+}
+
+bool VideoDecoder::isKeyVideoPkt(AVPacket* pkt){
+    bool result = false;
+    uint32_t keyIndex = 4;
+    uint32_t currentSegmentLength = 0;
+    uint32_t size = pkt->size;
+    while (keyIndex < size){
+        auto type = getNALType(pkt->data, keyIndex);
+        if (NALType::NAL_Slice == type){
+            break;
+        }else if (NALType::NAL_IDR_Slice == type){
+            result = true;
+            break;
+        }else{
+            currentSegmentLength = getNALSize(pkt->data, keyIndex);
+            keyIndex += currentSegmentLength + 4;
+            continue;
+        }
     }
-    if (mRedecodeFromPreviousIDRFrame){
-        return redecodeDuplicatedVideoPkt();
+    return result;
+}
+
+bool VideoDecoder::duplicatePacket(AVPacket* pkt){
+    if (isKeyVideoPkt(pkt)){
+        cleanupBufferedPktInfo();
+        mPktInfoArray[mPktInfoArrayEnd].isKeyPkt = true;
     }
-    PlayerState result = createImage();
-    if (result != PlayerState::ERROR){
-        result = renderImage();
+    
+    if (mPktInfoArrayEnd + 1 >= mPktInfoArrayCapacity){
+        if (!resizePktInfoArray()){
+            return false;
+        }
+    }
+    mPktInfoArray[mPktInfoArrayEnd].begin = mPktDataPoolEnd;
+    mPktInfoArray[mPktInfoArrayEnd].pts   = pkt->pts;
+    mPktInfoArray[mPktInfoArrayEnd].dts   = pkt->dts;
+    mPktInfoArray[mPktInfoArrayEnd].size  = pkt->size;
+    mPktInfoArrayEnd++;
+    
+    if (mPktDataPoolEnd + pkt->size >= mPktDataPoolCapacity){
+        if (!resizePktDataPool()){
+            return false;
+        }
+    }
+    memcpy(mPktDataPool.get() + mPktDataPoolEnd, pkt->data, pkt->size);
+    mPktDataPoolEnd += pkt->size;
+    return true;
+}
+
+bool VideoDecoder::resizePktDataPool(){
+    uint8_t* dataPtr = nullptr;
+    try {
+        dataPtr = new uint8_t[mPktDataPoolCapacity * 2];
+    } catch (const std::bad_alloc& e){
+        std::cout << "failed to resize pktDataPool.\n";
+        return false;
+    }
+    memmove(dataPtr, mPktDataPool.get(), mPktDataPoolEnd);
+    mPktDataPool.reset(dataPtr);
+    mPktDataPoolCapacity *= 2;
+    return true;
+}
+
+bool VideoDecoder::resizePktInfoArray(){
+    PktInfo* dataPtr = nullptr;
+    try {
+        dataPtr = new PktInfo[mPktInfoArrayCapacity * 2];
+    } catch (const std::bad_alloc& e) {
+        std::cout << "failed to resize pktInfoArray.\n";
+        return false;
+    }
+    memmove(dataPtr, mPktInfoArray.get(), mPktInfoArrayEnd * sizeof(PktInfo));
+    mPktInfoArray.reset(dataPtr);
+    mPktInfoArrayCapacity *= 2;
+    return true;
+}
+
+PlayerState VideoDecoder::redecodeDuplicatedVideoPkt(){
+    PlayerState result = PlayerState::OK;
+    if (mPktInfoArrayEnd > 0 && !(mPktInfoArray[mPktInfoArrayEnd - 1].isKeyPkt)){
+        uint32_t index = 0;
+        while (index < mPktInfoArrayEnd){
+            mPktInfo = &mPktInfoArray[index];
+            if (PlayerState::INVALID_DECODER_SESSION == createImage()) {
+                index = 0;
+                continue;
+            }
+            ++index;
+        }
+    }
+    mNeedRedecodeDuplicatedPkt = false;
+    return result;
+}
+
+bool VideoDecoder::resetDecoderSession(){
+    bool result = false;
+    if (mDecoderSession){
+        VTDecompressionSessionInvalidate(mDecoderSession);
+        CFRelease(mDecoderSession);
+        mDecoderSession = nullptr;
+        if (mDecoderFormatDescription){
+            CFRelease(mDecoderFormatDescription);
+            mDecoderFormatDescription = nullptr;
+        }
+        result = initDecoder();
+        if (result){
+            mNeedRedecodeDuplicatedPkt = true;
+        } else {
+            std::cout << "Failed to init decoder.\n";
+        }
     }
     return result;
 }
 
 PlayerState VideoDecoder::createImage(){
-    PlayerState result = PlayerState::ERROR;
+    PlayerState result = PlayerState::OK;
+    if (!mPktInfo || mPktInfo->size < 4){
+        return PlayerState::ERROR;
+    }
+    if (mPktInfo->isKeyPkt){
+//        extractIDRIfNecessary(*mPktInfo);
+    }
+    
+    if (mPixelBuffer){
+        CFRelease(mPixelBuffer);
+        mPixelBuffer = nullptr;
+    }
+    CMBlockBufferRef blockBuffer = nullptr;
+    OSStatus status  = CMBlockBufferCreateWithMemoryBlock(kCFAllocatorDefault,
+                                                          (void*)(mPktDataPool.get() + mPktInfo->begin),
+                                                          (size_t)mPktInfo->size,
+                                                          kCFAllocatorNull,
+                                                          nullptr, 0, (size_t)(mPktInfo->size),
+                                                          0, &blockBuffer);
+    if(status == kCMBlockBufferNoErr){
+        CMSampleBufferRef sampleBuffer = nullptr;
+        const size_t sampleSizeArray[] = {(size_t)(mPktInfo->size)};
+        status = CMSampleBufferCreateReady(kCFAllocatorDefault,
+                                           blockBuffer,
+                                           mDecoderFormatDescription,
+                                           1, 0, nullptr, 1, sampleSizeArray,
+                                           &sampleBuffer);
+        if (status == kCMBlockBufferNoErr && sampleBuffer){
+//            mVideoSkipFrame = getState()->mVideoSkipFrame;
+            if (mVideoSkipFrame && *mVideoSkipFrame != AVDISCARD_DEFAULT){
+                mDecodeFrameFlags = kVTDecodeFrame_DoNotOutputFrame;
+            }else {
+                mDecodeFrameFlags = 0;
+            }
+            VTDecodeInfoFlags flagOut = 0;
+            auto decodeStatus = VTDecompressionSessionDecodeFrame(mDecoderSession,
+                                                                  sampleBuffer,
+                                                                  mDecodeFrameFlags,
+                                                                  &mPixelBuffer,
+                                                                  &flagOut);
+             if(decodeStatus == kVTInvalidSessionErr){
+                 std::cout << "invalid session, reset decoder session" << std::endl;
+                if (resetDecoderSession()){
+                    if (mLastFramePTS < mPktInfo->pts){
+                        mLastFramePTS = mPktInfo->pts;
+                    }
+                    result = PlayerState::INVALID_DECODER_SESSION;
+                } else {
+                    result = PlayerState::ERROR;
+                }
+            }else if(decodeStatus != noErr){
+                std::cout << "decode failed status=%d" << std::endl;
+                result = PlayerState::IGNORE;
+            }
+            CFRelease(sampleBuffer);
+        }
+        CFRelease(blockBuffer);
+    }
     return result;
 }
 
-PlayerState VideoDecoder::renderImage(){
-    PlayerState result = PlayerState::ERROR;
+PlayerState VideoDecoder::enqueueImage(){
+    PlayerState result = PlayerState::OK;
+    if (!mPixelBuffer){
+        if (mDecodeFrameFlags == kVTDecodeFrame_DoNotOutputFrame){
+            std::cout << "Decoder discarded current frame." << std::endl;
+        }else{
+            std::cout << "Empty pixelBuffer after decoded! Just ignore it!" << std::endl;
+            return PlayerState::IGNORE;
+        }
+    }
+    
+    auto imagePtr = std::shared_ptr<image>(new image, [](image* ptr){
+        if (ptr->pixelBuff){
+            CFRelease(ptr->pixelBuff);
+            ptr->pixelBuff = nullptr;
+        }
+        delete ptr;
+    });
+    
+    imagePtr->pts = mPktInfo->pts;
+    imagePtr->dts = mPktInfo->dts;
+    if (mPixelBuffer){
+        imagePtr->pixelBuff = (CVPixelBufferRef)CFRetain(mPixelBuffer);
+    }
+    mImageMap.insert(std::make_pair(mPktInfo->pts, std::move(imagePtr)));
+    if (mImageMap.size() < 4){
+        result = PlayerState::NEED_MORE_DATA;
+    }
     return result;
 }
 

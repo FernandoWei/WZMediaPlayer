@@ -55,7 +55,6 @@ public:
     void flush();
     
 private:
-    PlayerState decodeVideoPkt(AVPacket* pkt);
     PlayerState redecodeDuplicatedVideoPkt();
     PlayerState createImage();
     PlayerState enqueueImage();
@@ -64,7 +63,10 @@ private:
     bool extractSPSAndPPS();
     void resetHWDecoder();
     bool initDecoder();
-    bool duplicatePacket();
+    bool duplicatePacket(AVPacket* pkt);
+    bool isKeyVideoPkt(AVPacket* pkt);
+    bool resizePktDataPool();
+    bool resizePktInfoArray();
     void synchronize();
     void reset();
     void cleanupDecoder();
@@ -72,6 +74,7 @@ private:
     void cleanupBufferedPktInfo();
     void releaseDuplicatedPktBuffer();
     bool prepareDuplicatedPktBuffer();
+    bool resetDecoderSession();
     static void didDecompress( void *decompressionOutputRefCon, void *sourceFrameRefCon, OSStatus status, VTDecodeInfoFlags infoFlags, CVImageBufferRef pixelBuffer, CMTime presentationTimeStamp, CMTime presentationDuration );
     
 private:
@@ -91,11 +94,12 @@ private:
     uint32_t mPktInfoArrayEnd;
     uint32_t mPktInfoArrayCapacity;
     
-    bool mRedecodeFromPreviousIDRFrame;
+    bool mNeedRedecodeDuplicatedPkt;
     int64_t mTrackStartTime;
     int mOffset;
     int64_t mLastFramePTS;
     AVDiscard* mVideoSkipFrame;
+    PktInfo* mPktInfo;
     bool mIsEmptyImageCausedOfInvalidDecodeSession;
 };
 

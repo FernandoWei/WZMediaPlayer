@@ -148,6 +148,7 @@ PlayerState MediaDecoder::decode(AVPacket* pkt){
 }
 
 bool MediaDecoder::prepare(){
+    return true;
 }
 
 
