@@ -19,7 +19,28 @@ AudioDecoder::~AudioDecoder(){
 
 bool AudioDecoder::prepare(){
     prepareAudioCodecParameters();
-    return setupAudioUnit();
+    if (setupAudioUnit()){
+        return prepareAudioBuffer();
+    }
+    return false;
+}
+
+void AudioDecoder::prepareAudioCodecParameters(){
+    AVCodecParameters* codec = mMediaStream->codecpar;
+    mSampleRate = codec->sample_rate;
+    mChannelsPerSample = codec->channels;
+    mSampleSize = codec->frame_size;
+    mSampleFormat = (AVSampleFormat)(codec->format);
+}
+
+bool AudioDecoder::prepareAudioBuffer(){
+    try {
+        mAudioBuffer = std::unique_ptr<uint8_t[]>(new uint8_t[AAC_FRAMES_PER_PACKET * 10]);
+    } catch (const std::bad_alloc& e){
+        std::cout << "Failed to allocate audio buffer.\n";
+        return false;
+    }
+    return true;
 }
 
 PlayerState AudioDecoder::decode(AVPacket* pkt){
@@ -35,13 +56,7 @@ void AudioDecoder::flush(){
     MediaDecoder::flush();
 }
 
-void AudioDecoder::prepareAudioCodecParameters(){
-    AVCodecParameters* codec = mMediaStream->codecpar;
-    mSampleRate = codec->sample_rate;
-    mChannelsPerSample = codec->channels;
-    mSampleSize = codec->frame_size;
-    mSampleFormat = (AVSampleFormat)(codec->format);
-}
+
 
 bool AudioDecoder::setupAudioUnit(){
     AudioComponentDescription desc;

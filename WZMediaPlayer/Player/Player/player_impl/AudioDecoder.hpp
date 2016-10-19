@@ -34,6 +34,7 @@ private:
                                      AudioBufferList *ioData);
     bool setupAudioUnit();
     void prepareAudioCodecParameters();
+    bool prepareAudioBuffer();
     void enqueueAudioPacket(AVPacket* pkt);
     
 private:
