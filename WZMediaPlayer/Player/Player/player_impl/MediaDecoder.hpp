@@ -10,13 +10,14 @@
 #define MediaDecoder_hpp
 
 #include "CommonInclude.h"
+#include "MediaState.hpp"
 
 enum class PlayerState;
 
 class MediaDecoder {
     
 public:
-    MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream);
+    MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state);
     MediaDecoder() = default;
     MediaDecoder(const MediaDecoder& decoder) = delete;
     MediaDecoder(MediaDecoder&& decoder) noexcept = delete;
@@ -35,6 +36,7 @@ public:
     bool virtual prepare();
     PlayerState virtual decode(AVPacket* pkt);
     void virtual flush();
+    virtual uint32_t* getAudioClockPtr();
     
 private:
     void dequeuePacket(AVPacket* packet);
@@ -44,11 +46,12 @@ private:
     
 protected:
     AVStream* mMediaStream;
+    std::atomic_bool mPaused;
+    std::atomic_bool mStopped;
+    std::shared_ptr<MediaState> mMediaState;
     
 private:
     bool mPrepared;
-    std::atomic_bool mPaused;
-    std::atomic_bool mStopped;
     std::atomic_bool mIsFlushing;
     bool mFirstBuffered;
     

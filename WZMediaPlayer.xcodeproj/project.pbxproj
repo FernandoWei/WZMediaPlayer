@@ -10,6 +10,7 @@
 		DFAA9BCA1DA210B600E6A8B9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA9BC91DA210B600E6A8B9 /* CoreMedia.framework */; };
 		DFAA9BCC1DA210C000E6A8B9 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA9BCB1DA210C000E6A8B9 /* CoreFoundation.framework */; };
 		DFC1F5811D9E2CC100BED5CD /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFC1F5801D9E2CC100BED5CD /* VideoToolbox.framework */; };
+		EDACC44F1DB89E970012FBB1 /* MediaState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDACC44D1DB89E970012FBB1 /* MediaState.cpp */; };
 		EDCACC3B1D9375BE00B4BCC6 /* WZMediaPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCACC3A1D9375BE00B4BCC6 /* WZMediaPlayerTests.m */; };
 		EDCACC461D9375BE00B4BCC6 /* WZMediaPlayerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCACC451D9375BE00B4BCC6 /* WZMediaPlayerUITests.m */; };
 		EDCACE1B1D93C6B800B4BCC6 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDCACD971D93C6B800B4BCC6 /* libavcodec.a */; };
@@ -55,6 +56,8 @@
 		DFAA9BC91DA210B600E6A8B9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		DFAA9BCB1DA210C000E6A8B9 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		DFC1F5801D9E2CC100BED5CD /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		EDACC44D1DB89E970012FBB1 /* MediaState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MediaState.cpp; sourceTree = "<group>"; };
+		EDACC44E1DB89E970012FBB1 /* MediaState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MediaState.hpp; sourceTree = "<group>"; };
 		EDCACC1A1D9375BE00B4BCC6 /* WZMediaPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WZMediaPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDCACC361D9375BE00B4BCC6 /* WZMediaPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WZMediaPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDCACC3A1D9375BE00B4BCC6 /* WZMediaPlayerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WZMediaPlayerTests.m; sourceTree = "<group>"; };
@@ -509,16 +512,18 @@
 			isa = PBXGroup;
 			children = (
 				EDCACE131D93C6B800B4BCC6 /* IMediaPlayer.hpp */,
-				EDCACE111D93C6B800B4BCC6 /* CMediaPlayer.cpp */,
 				EDCACE121D93C6B800B4BCC6 /* CMediaPlayer.hpp */,
-				EDCACE0F1D93C6B800B4BCC6 /* AudioDecoder.cpp */,
-				EDCACE101D93C6B800B4BCC6 /* AudioDecoder.hpp */,
-				EDCACE141D93C6B800B4BCC6 /* MediaDecoder.cpp */,
+				EDCACE111D93C6B800B4BCC6 /* CMediaPlayer.cpp */,
 				EDCACE151D93C6B800B4BCC6 /* MediaDecoder.hpp */,
-				EDCACE161D93C6B800B4BCC6 /* MediaSource.cpp */,
-				EDCACE171D93C6B800B4BCC6 /* MediaSource.hpp */,
-				EDCACE181D93C6B800B4BCC6 /* VideoDecoder.cpp */,
+				EDCACE141D93C6B800B4BCC6 /* MediaDecoder.cpp */,
+				EDCACE101D93C6B800B4BCC6 /* AudioDecoder.hpp */,
+				EDCACE0F1D93C6B800B4BCC6 /* AudioDecoder.cpp */,
 				EDCACE191D93C6B800B4BCC6 /* VideoDecoder.hpp */,
+				EDCACE181D93C6B800B4BCC6 /* VideoDecoder.cpp */,
+				EDCACE171D93C6B800B4BCC6 /* MediaSource.hpp */,
+				EDCACE161D93C6B800B4BCC6 /* MediaSource.cpp */,
+				EDACC44E1DB89E970012FBB1 /* MediaState.hpp */,
+				EDACC44D1DB89E970012FBB1 /* MediaState.cpp */,
 				EDCACE491D93E0B000B4BCC6 /* CommonInclude.h */,
 			);
 			path = player_impl;
@@ -686,6 +691,7 @@
 				EDCACE451D93C78300B4BCC6 /* ViewController.m in Sources */,
 				EDCACE3F1D93C78300B4BCC6 /* AppDelegate.m in Sources */,
 				EDCACE221D93C6B800B4BCC6 /* AudioDecoder.cpp in Sources */,
+				EDACC44F1DB89E970012FBB1 /* MediaState.cpp in Sources */,
 				EDCACE231D93C6B800B4BCC6 /* CMediaPlayer.cpp in Sources */,
 				EDCACE441D93C78300B4BCC6 /* main.m in Sources */,
 				EDCACE261D93C6B800B4BCC6 /* VideoDecoder.cpp in Sources */,

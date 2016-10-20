@@ -8,9 +8,9 @@
 
 #include "VideoDecoder.hpp"
 
-VideoDecoder::VideoDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream)
+VideoDecoder::VideoDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state)
 {
-    MediaDecoder::MediaDecoder(std::move(name), firstBufferedPktCount, nonFirstBufferSecondsOfData, stream);
+    MediaDecoder::MediaDecoder(std::move(name), firstBufferedPktCount, nonFirstBufferSecondsOfData, stream, state);
 }
 
 VideoDecoder::~VideoDecoder(){
@@ -168,6 +168,7 @@ void VideoDecoder::didDecompress(
 
 PlayerState VideoDecoder::decode(AVPacket* pkt){
     PlayerState result = PlayerState::OK;
+    mMediaState->setVideoReady(true);
     if (!pkt || !(pkt->data) || pkt->size < 4){
         return PlayerState::ERROR;
     }
@@ -193,7 +194,7 @@ PlayerState VideoDecoder::decode(AVPacket* pkt){
 
 PlayerState VideoDecoder::renderImage(){
     if (!mImageMap.empty()){
-//        getState()->synchronize(nullptr, (int)getCurrentPTS(), this, this, MediaDecoder::synchronizeWait, getBufferedPosition());
+        mMediaState->synchronize(mImageMap.begin()->first, mStopped);
         auto pixelBuffer = mImageMap.begin()->second->pixelBuff;
         if (pixelBuffer){
             auto picture = (CVPixelBufferRef)CFRetain(pixelBuffer);
@@ -346,8 +347,7 @@ PlayerState VideoDecoder::createImage(){
                                            1, 0, nullptr, 1, sampleSizeArray,
                                            &sampleBuffer);
         if (status == kCMBlockBufferNoErr && sampleBuffer){
-//            mVideoSkipFrame = getState()->mVideoSkipFrame;
-            if (mVideoSkipFrame && *mVideoSkipFrame != AVDISCARD_DEFAULT){
+            if (mMediaState->getCurrentDiscardState() == DiscardFrameType::DISCARD_DEFAULT){
                 mDecodeFrameFlags = kVTDecodeFrame_DoNotOutputFrame;
             }else {
                 mDecodeFrameFlags = 0;

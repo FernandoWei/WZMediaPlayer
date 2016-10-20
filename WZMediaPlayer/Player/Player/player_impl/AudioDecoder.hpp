@@ -12,13 +12,19 @@
 #include "MediaDecoder.hpp"
 #include <AudioToolbox/AudioToolbox.h>
 
-#define kOutputBus 0
-#define AAC_FRAMES_PER_PACKET 1024
+const unsigned int kNumAQBufs = 3;
+const unsigned int kAACSamplesPerPacket = 1024;
+const size_t kAQBufSize = 128 * kAACSamplesPerPacket;
 
 class AudioDecoder : public MediaDecoder {
 public:
-    AudioDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream);
+    AudioDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state);
     ~AudioDecoder();
+    
+public:
+    void setVolume(float volume);
+    void getVolume(float* volume);
+    uint32_t* getAudioClockPtr();
     
 protected:
     bool virtual prepare();
@@ -26,27 +32,47 @@ protected:
     void virtual flush();
     
 private:
-    static OSStatus playbackCallback(void *inRefCon,
-                                     AudioUnitRenderActionFlags *ioActionFlags,
-                                     const AudioTimeStamp *inTimeStamp,
-                                     UInt32 inBusNumber,
-                                     UInt32 inNumberFrames,
-                                     AudioBufferList *ioData);
-    bool setupAudioUnit();
-    void prepareAudioCodecParameters();
-    bool prepareAudioBuffer();
-    void enqueueAudioPacket(AVPacket* pkt);
+    bool prepareCodecParameters();
+    bool setupAudioQueue();
+    void startAudioQueueIfNeeded();
+    int findCurrentAvailableBuffIndex(AudioQueueBufferRef buffer);
+    bool waitForFreeBuffer();
+    
+    void audioQueueResume();
+    void audioQueuePause();
+    void audioQueueFlush();
+    void audioQueueStop(bool didStopImmediately);
+    void audioQueueDispose();
+    PlayerState enqueueAudioPacket(const AVPacket* pkt);
     
 private:
-    AudioComponentInstance mAudioUnit;
+    static void MyAudioQueueOutputCallback(void* inClientData,
+                                           AudioQueueRef inAQ,
+                                           AudioQueueBufferRef		inBuffer);
+    static void MyAudioQueueIsRunningCallback(void*				inClientData,
+                                              AudioQueueRef		inAQ,
+                                              AudioQueuePropertyID	inID);
+    
+private:
+    AudioQueueBufferRef mAudioQueueBuffer[kNumAQBufs];
+    uint32_t audioClock[kNumAQBufs] = {0};
+    bool inUse[kNumAQBufs] = {false, false, false};
+    
+    uint32_t mCurrentAudioClock;
+    AudioQueueRef mAudioQueue;
+    bool mAudioQueueStarted;
+    int mCurrentAvailableBuffIndex;
+    float mVolume;
+    
+    std::mutex mMutexForSynchronize;
+    std::mutex mMutexForStartAQ;
+    std::condition_variable mCondition;
     
     int mSampleRate;
     int mChannelsPerSample;
     int mBytesPerPacket;
     int mSampleSize;
     AVSampleFormat mSampleFormat;
-    
-    std::unique_ptr<uint8_t[]> mAudioBuffer;
     
 };
 

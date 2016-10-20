@@ -68,6 +68,11 @@ enum class NALType{
     NAL_ERR
 };
 
+enum class DiscardFrameType {
+    DISCARD_NONE,
+    DISCARD_DEFAULT
+};
+
 NALType getNALType(uint8_t* data, int index){
     NALType type;
     switch(data[index] & 0x1F){

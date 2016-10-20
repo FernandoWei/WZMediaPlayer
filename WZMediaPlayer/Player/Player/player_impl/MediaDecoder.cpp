@@ -9,7 +9,7 @@
 #include "MediaDecoder.hpp"
 
 
-MediaDecoder::MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream):
+MediaDecoder::MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state):
 mPrepared(false),
 mPaused(false),
 mStopped(false),
@@ -18,7 +18,8 @@ mName(name),
 mIsFlushing(false),
 mFirstBufferedPktCount(firstBufferedPktCount),
 mNonFirstBufferSecondsOfData(nonFirstBufferSecondsOfData),
-mMediaStream(stream)
+mMediaStream(stream),
+mMediaState(state)
 {
     std::cout << mName << " construct.\n";
     av_init_packet(&mDequeuePacket);
@@ -149,6 +150,10 @@ PlayerState MediaDecoder::decode(AVPacket* pkt){
 
 bool MediaDecoder::prepare(){
     return true;
+}
+
+uint32_t* MediaDecoder::getAudioClockPtr(){
+    return nullptr;
 }
 
 

@@ -67,6 +67,7 @@ private:
     std::shared_ptr<MediaSource> mMediaSource;
     std::shared_ptr<MediaDecoder> mAudioDecoder;
     std::shared_ptr<MediaDecoder> mVideoDecoder;
+    std::shared_ptr<MediaState> mMediaState;
     
     
     

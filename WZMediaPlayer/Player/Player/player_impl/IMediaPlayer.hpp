@@ -14,8 +14,8 @@
 class IMediaPlayer {
     
 public:
-    IMediaPlayer(IMediaPlayer& player) = delete;
-    IMediaPlayer(IMediaPlayer&& player) = delete;
+    IMediaPlayer(const IMediaPlayer& player) = delete;
+    IMediaPlayer(IMediaPlayer&& player) noexcept = delete;
     IMediaPlayer& operator=(const IMediaPlayer& player) = delete;
     IMediaPlayer& operator=(const IMediaPlayer&& player) = delete;
     virtual ~IMediaPlayer(){}
