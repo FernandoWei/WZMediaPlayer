@@ -48,8 +48,7 @@ private:
     bool mAudioReady;
     
     int64_t mLastVideoPTS;
-    std::chrono::system_clock mLastClock;
-    std::chrono::system_clock mCurrentClock;
+    std::chrono::system_clock::time_point mLastClock;
 };
 
 #endif /* MediaState_hpp */

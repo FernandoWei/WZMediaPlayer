@@ -53,8 +53,9 @@ void MediaState::synchronize(int64_t pts, std::atomic_bool& stopped){
             }
         }
     }else {
-        mCurrentClock = std::chrono::system_clock::now();
-        std::chrono::duration<int32_t, std::milli> elapsedTime = mCurrentClock - mLastClock;
+        auto currentClock = std::chrono::system_clock::now();
+        auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentClock - mLastClock);
+        mLastClock = currentClock;
     }
 }
 
