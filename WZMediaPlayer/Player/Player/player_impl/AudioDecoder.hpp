@@ -18,7 +18,7 @@ const size_t kAQBufSize = 128 * kAACSamplesPerPacket;
 
 class AudioDecoder : public MediaDecoder {
 public:
-    AudioDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state);
+    AudioDecoder(uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state);
     ~AudioDecoder();
     
 public:

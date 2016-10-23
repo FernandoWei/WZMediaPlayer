@@ -46,7 +46,7 @@ typedef struct _image
 
 class VideoDecoder : public MediaDecoder {
 public:
-    VideoDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state);
+    VideoDecoder(uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state);
     ~VideoDecoder();
     
 public:

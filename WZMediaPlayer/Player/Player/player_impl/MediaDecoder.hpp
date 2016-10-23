@@ -18,7 +18,7 @@ enum class PlayerState;
 class MediaDecoder : public MediaLog{
     
 public:
-    MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state);
+    MediaDecoder(uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state);
     MediaDecoder() = default;
     MediaDecoder(const MediaDecoder& decoder) = delete;
     MediaDecoder(MediaDecoder&& decoder) noexcept = delete;
@@ -58,7 +58,6 @@ private:
     bool mFirstBuffered;
     
     std::list<std::shared_ptr<AVPacket>> mPacketQueue;
-    std::string mName;
     AVPacket mDequeuePacket;
     
     uint8_t mFirstBufferedPktCount;

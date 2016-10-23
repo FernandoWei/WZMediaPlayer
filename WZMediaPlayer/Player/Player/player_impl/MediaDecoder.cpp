@@ -9,24 +9,23 @@
 #include "MediaDecoder.hpp"
 
 
-MediaDecoder::MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state):
+MediaDecoder::MediaDecoder(uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state):
 mPrepared(false),
 mPaused(false),
 mStopped(false),
 mFirstBuffered(true),
-mName(name),
 mIsFlushing(false),
 mFirstBufferedPktCount(firstBufferedPktCount),
 mNonFirstBufferSecondsOfData(nonFirstBufferSecondsOfData),
 mMediaStream(stream),
 mMediaState(state)
 {
-    std::cout << mName << " construct.\n";
+    log("construct.");
     av_init_packet(&mDequeuePacket);
 }
 
 MediaDecoder::~MediaDecoder(){
-    std::cout << mName << " desconstruct.\n";
+    log("desconstruct.");
     clearPktQueue();
 }
 
@@ -55,7 +54,7 @@ void MediaDecoder::enqueuePacket(const AVPacket* pkt){
         if (packetPtr){
             av_copy_packet(packetPtr.get(), pkt);
             mPacketQueue.push_back(packetPtr);
-            std::cout << mName << " buffered " << mPacketQueue.size() << " packets.\n";
+            log("buffered", mPacketQueue.size(), "packets.");
         }
     }
 }
@@ -111,33 +110,33 @@ void MediaDecoder::start(){
         av_packet_unref(&mDequeuePacket);
     }
     
-    std::cout << mName << " ends.\n";
+    log("ends.");
 }
 
 void MediaDecoder::stop(){
     if (!mStopped){
         mStopped = true;
-        std::cout << mName << " stopped.\n";
+        log("stopped.");
     }
 }
 
 void MediaDecoder::pause(){
     if (!mPaused){
         mPaused = true;
-        std::cout << mName << " paused.\n";
+        log("paused.");
     }
 }
 
 void MediaDecoder::resume(){
     if (mPaused){
         mPaused = false;
-        std::cout << mName << " resumed.\n";
+        log("resumed.");
     }
 }
 
 void MediaDecoder::flush(){
     if (!mIsFlushing){
-        std::cout << mName << " flushed.\n";
+        log("flushed.");
         mIsFlushing = true;
         clearPktQueue();
         mIsFlushing = false;

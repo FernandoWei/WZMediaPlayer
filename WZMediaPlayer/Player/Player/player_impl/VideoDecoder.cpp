@@ -8,9 +8,9 @@
 
 #include "VideoDecoder.hpp"
 
-VideoDecoder::VideoDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state)
+VideoDecoder::VideoDecoder(uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state)
 {
-    MediaDecoder::MediaDecoder(std::move(name), firstBufferedPktCount, nonFirstBufferSecondsOfData, stream, state);
+    MediaDecoder::MediaDecoder(firstBufferedPktCount, nonFirstBufferSecondsOfData, stream, state);
 }
 
 VideoDecoder::~VideoDecoder(){
@@ -359,7 +359,7 @@ PlayerState VideoDecoder::createImage(){
                                                                   &mPixelBuffer,
                                                                   &flagOut);
              if(decodeStatus == kVTInvalidSessionErr){
-                 std::cout << "invalid session, reset decoder session" << std::endl;
+                 log("invalid session, reset decoder session.");
                 if (resetDecoderSession()){
                     if (mLastFramePTS < mPktInfo->pts){
                         mLastFramePTS = mPktInfo->pts;
@@ -383,9 +383,9 @@ PlayerState VideoDecoder::enqueueImage(){
     PlayerState result = PlayerState::OK;
     if (!mPixelBuffer){
         if (mDecodeFrameFlags == kVTDecodeFrame_DoNotOutputFrame){
-            std::cout << "Decoder discarded current frame.\n" ;
+            log("Decoder discarded current frame.");
         }else{
-            std::cout << "Empty pixelBuffer after decoded! Just ignore it!\n";
+            log("Empty pixelBuffer after decoded! Just ignore it!");
             return PlayerState::IGNORE;
         }
     }

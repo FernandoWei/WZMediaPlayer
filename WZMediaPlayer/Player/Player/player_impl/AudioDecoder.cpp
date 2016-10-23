@@ -8,7 +8,7 @@
 
 #include "AudioDecoder.hpp"
 
-AudioDecoder::AudioDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state):
+AudioDecoder::AudioDecoder(uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state):
 mAudioQueue(nullptr),
 mSampleRate(0),
 mChannelsPerSample(0),
@@ -16,7 +16,7 @@ mCurrentAudioClock(0),
 mAudioQueueStarted(false),
 mVolume(1.0)
 {
-    MediaDecoder::MediaDecoder(std::move(name), firstBufferedPktCount, nonFirstBufferSecondsOfData, stream, state);
+    MediaDecoder::MediaDecoder(firstBufferedPktCount, nonFirstBufferSecondsOfData, stream, state);
 }
 
 AudioDecoder::~AudioDecoder(){
