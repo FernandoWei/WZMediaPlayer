@@ -53,6 +53,7 @@ public:
     bool virtual prepare();
     PlayerState virtual decode(AVPacket* pkt);
     void flush();
+    virtual std::string toString() const;
     
 private:
     PlayerState redecodeDuplicatedVideoPkt();

@@ -21,7 +21,7 @@ void MediaLog::logImpl(const T& t, Args... args){
 
 template <typename T, typename... Args>
 void MediaLog::log(const T& t, Args... args){
-    std::cout << toString();
+    std::cout << "[" << toString() << "]:";
     logImpl(t, args...);
 }
 

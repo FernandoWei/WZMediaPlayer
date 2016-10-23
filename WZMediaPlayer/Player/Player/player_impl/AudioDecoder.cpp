@@ -207,3 +207,7 @@ void AudioDecoder::audioQueueDispose(){
         
     }
 }
+
+std::string AudioDecoder::toString() const {
+    return std::string("AudioDecoder");
+}

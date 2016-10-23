@@ -413,3 +413,7 @@ PlayerState VideoDecoder::enqueueImage(){
 void VideoDecoder::flush(){
     MediaDecoder::flush();
 }
+
+std::string VideoDecoder::toString() const {
+    return std::string("VideoDecoder");
+}

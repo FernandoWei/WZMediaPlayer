@@ -30,6 +30,7 @@ protected:
     bool virtual prepare();
     PlayerState virtual decode(AVPacket* pkt);
     void virtual flush();
+    virtual std::string toString() const;
     
 private:
     bool prepareCodecParameters();

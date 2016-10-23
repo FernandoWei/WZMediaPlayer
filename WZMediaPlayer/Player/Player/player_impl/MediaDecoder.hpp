@@ -11,10 +11,11 @@
 
 #include "CommonInclude.h"
 #include "MediaState.hpp"
+#include "MediaLog.hpp"
 
 enum class PlayerState;
 
-class MediaDecoder {
+class MediaDecoder : public MediaLog{
     
 public:
     MediaDecoder(std::string&& name, uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state);
@@ -37,6 +38,7 @@ public:
     PlayerState virtual decode(AVPacket* pkt);
     void virtual flush();
     virtual uint32_t* getAudioClockPtr();
+    virtual std::string toString() const;
     
 private:
     void dequeuePacket(AVPacket* packet);

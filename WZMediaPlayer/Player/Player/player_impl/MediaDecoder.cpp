@@ -156,6 +156,10 @@ uint32_t* MediaDecoder::getAudioClockPtr(){
     return nullptr;
 }
 
+std::string MediaDecoder::toString() const {
+    return std::string("MediaDecoder");
+}
+
 
 
 
