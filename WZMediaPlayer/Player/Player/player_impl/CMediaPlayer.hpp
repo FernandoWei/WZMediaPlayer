@@ -12,6 +12,7 @@
 
 
 #include "IMediaPlayer.hpp"
+#include "MediaLog.hpp"
 #include "MediaSource.hpp"
 #include "AudioDecoder.hpp"
 #include "VideoDecoder.hpp"
@@ -22,7 +23,7 @@ class VideoDecoder;
 
 
 
-class CMediaPlayer : public IMediaPlayer {
+class CMediaPlayer : public IMediaPlayer, public MediaLog {
     
 public:
     virtual ~CMediaPlayer();
@@ -40,6 +41,7 @@ private:
     void virtual pause();
     void virtual resume();
     uint64_t virtual getCurrentPosition();
+    std::string virtual toString() const;
     
 private:
     PlayerState prepare();

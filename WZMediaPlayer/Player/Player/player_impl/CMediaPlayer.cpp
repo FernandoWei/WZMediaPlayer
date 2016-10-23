@@ -173,7 +173,7 @@ void CMediaPlayer::readAndEnqueuePacket(){
         }
     }
     
-    std::cout << "PreparePacketQueueThread end.\n";
+    log("PreparePacketQueueThread end.");
 }
 
 void CMediaPlayer::enqueuePacket(AVPacket* packet){
@@ -190,6 +190,10 @@ void CMediaPlayer::startDecoding(){
         mThreadIDs.insert(std::make_pair(task.first, mThreadPool.back().get_id()));
     }
     
+}
+
+std::string CMediaPlayer::toString() const {
+    return std::string("CMediaPlayer");
 }
 
 
