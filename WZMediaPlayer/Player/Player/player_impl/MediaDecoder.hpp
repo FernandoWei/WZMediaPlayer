@@ -13,8 +13,6 @@
 #include "MediaState.hpp"
 #include "MediaLog.hpp"
 
-enum class PlayerState;
-
 class MediaDecoder : public MediaLog{
     
 public:

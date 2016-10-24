@@ -109,7 +109,7 @@ PlayerState CMediaPlayer::prepareTasks(){
         })));
         return PlayerState::OK;
     } else {
-        std::cout << "Failed to prepare media tasks because of stopped state.\n";
+        log("Failed to prepare media tasks because of stopped state.");
         return PlayerState::STOPPED;
     }
 }

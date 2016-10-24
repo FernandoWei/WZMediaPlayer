@@ -9,8 +9,8 @@
 #include "VideoDecoder.hpp"
 
 VideoDecoder::VideoDecoder(uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state)
+:MediaDecoder(firstBufferedPktCount, nonFirstBufferSecondsOfData, stream, state)
 {
-    MediaDecoder::MediaDecoder(firstBufferedPktCount, nonFirstBufferSecondsOfData, stream, state);
 }
 
 VideoDecoder::~VideoDecoder(){
@@ -144,7 +144,7 @@ bool VideoDecoder::extractSPSAndPPS(){
             memcpy(mPPS.data(), &codecPar->extradata[ppsOffsetIndex], ppsLength);
             result = true;
         } else {
-            std::cout << "invalid codec data.\n";
+            log("invalid codec data.");
         }
     }
     return result;
@@ -258,7 +258,7 @@ bool VideoDecoder::resizePktDataPool(){
     try {
         dataPtr = new uint8_t[mPktDataPoolCapacity * 2];
     } catch (const std::bad_alloc& e){
-        std::cout << "failed to resize pktDataPool.\n";
+        log("failed to resize pktDataPool.");
         return false;
     }
     memmove(dataPtr, mPktDataPool.get(), mPktDataPoolEnd);
@@ -272,7 +272,7 @@ bool VideoDecoder::resizePktInfoArray(){
     try {
         dataPtr = new PktInfo[mPktInfoArrayCapacity * 2];
     } catch (const std::bad_alloc& e) {
-        std::cout << "failed to resize pktInfoArray.\n";
+        log("failed to resize pktInfoArray.");
         return false;
     }
     memmove(dataPtr, mPktInfoArray.get(), mPktInfoArrayEnd * sizeof(PktInfo));
@@ -312,7 +312,7 @@ bool VideoDecoder::resetDecoderSession(){
         if (result){
             mNeedRedecodeDuplicatedPkt = true;
         } else {
-            std::cout << "Failed to init decoder.\n";
+            log("Failed to init decoder.");
         }
     }
     return result;
@@ -369,7 +369,7 @@ PlayerState VideoDecoder::createImage(){
                     result = PlayerState::ERROR;
                 }
             }else if(decodeStatus != noErr){
-                std::cout << "decode failed status=%d" << std::endl;
+                log("decode failed status= ", decodeStatus);
                 result = PlayerState::IGNORE;
             }
             CFRelease(sampleBuffer);

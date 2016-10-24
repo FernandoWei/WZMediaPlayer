@@ -9,6 +9,7 @@
 #include "AudioDecoder.hpp"
 
 AudioDecoder::AudioDecoder(uint8_t firstBufferedPktCount, uint8_t nonFirstBufferSecondsOfData, AVStream* stream, std::shared_ptr<MediaState> state):
+MediaDecoder(firstBufferedPktCount, nonFirstBufferSecondsOfData, stream, state),
 mAudioQueue(nullptr),
 mSampleRate(0),
 mChannelsPerSample(0),
@@ -16,7 +17,6 @@ mCurrentAudioClock(0),
 mAudioQueueStarted(false),
 mVolume(1.0)
 {
-    MediaDecoder::MediaDecoder(firstBufferedPktCount, nonFirstBufferSecondsOfData, stream, state);
 }
 
 AudioDecoder::~AudioDecoder(){
@@ -53,7 +53,7 @@ void AudioDecoder::flush(){
 
 PlayerState AudioDecoder::enqueueAudioPacket(const AVPacket* pkt){
     if (!pkt || !pkt->data || pkt->size > kAQBufSize){
-        std::cout << "Invalid audio packet for input.\n";
+        log("Invalid audio packet for input.");
         return PlayerState::IGNORE;
     }
     
@@ -169,7 +169,7 @@ void AudioDecoder::startAudioQueueIfNeeded(){
     std::lock_guard<std::mutex> guard(mMutexForStartAQ);
     if (!mAudioQueueStarted && mAudioQueue){
         if (mPaused || mStopped){
-            std::cout << "AQ starting was rejected when Paused or Stopped.\n";
+            log("AQ starting was rejected when Paused or Stopped.");
             return;
         }
         OSStatus err = AudioQueueStart(mAudioQueue, nullptr);

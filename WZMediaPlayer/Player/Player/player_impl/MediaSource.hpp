@@ -25,10 +25,10 @@ public:
     PlayerState prepare();
     void stop();
     PlayerState read(AVPacket* packet);
-    int getVideoStreamIndex();
-    int getAudioStreamIndex();
-    AVStream* getAudioStream();
-    AVStream* getVideoStream();
+    int getVideoStreamIndex() const;
+    int getAudioStreamIndex() const;
+    AVStream* getAudioStream() const;
+    AVStream* getVideoStream() const;
     
     
 private:
@@ -47,8 +47,6 @@ private:
     
     std::string mUrl;
     std::atomic_bool mStopped;
-    
-    
 };
 
 #endif /* MediaSource_hpp */

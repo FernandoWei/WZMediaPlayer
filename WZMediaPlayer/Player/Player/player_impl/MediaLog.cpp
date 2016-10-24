@@ -40,12 +40,6 @@ void MediaLog::printCurrentTimeAndClassname() const {
     
     auto now_time_t = std::chrono::system_clock::to_time_t(now);
     struct std::tm* tm = std::localtime(&now_time_t);
-    std::cout << tm->tm_year + 1900 << "-";
-    std::cout << std::setfill('0') << std::setw(2) << tm->tm_mon + 1 << "-";
-    std::cout << std::setfill('0') << std::setw(2) << tm->tm_mday << " ";
-    std::cout << std::setfill('0') << std::setw(2) << tm->tm_hour << ":";
-    std::cout << std::setfill('0') << std::setw(2) << tm->tm_min << ":";
-    std::cout << std::setfill('0') << std::setw(2) << tm->tm_sec << ".";
-    std::cout << std::setfill('0') << std::setw(3) << now_ms_part.count();
+    std::printf("%4d-%2d-%2d %2d:%2d:%2d.%3lld", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, now_ms_part.count());
     std::cout << " [" << toString() << "]: ";
 }

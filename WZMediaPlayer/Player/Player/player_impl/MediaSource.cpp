@@ -27,7 +27,7 @@ PlayerState MediaSource::read(AVPacket* pkt){
     if (status < 0){
         if (AVERROR_EOF == status || AVERROR(EIO) == status){
             if (mStopped){
-                std::cout << "reading packet were stopped.\n";
+                std::cout << "reading packet was stopped.\n";
                 result = PlayerState::TRY_AGAIN_LATER;
             } else {
                 std::cout << "end of stream with result " << "EOF: " << (status == AVERROR_EOF) << ", EIO: " << (status == AVERROR(EIO)) << ".\n";
@@ -95,19 +95,19 @@ void MediaSource::close(){
     }
 }
 
-AVStream* MediaSource::getAudioStream(){
+AVStream* MediaSource::getAudioStream() const {
     return mAudioStream;
 }
 
-AVStream* MediaSource::getVideoStream(){
+AVStream* MediaSource::getVideoStream() const {
     return mVideoStream;
 }
 
-int MediaSource::getAudioStreamIndex(){
+int MediaSource::getAudioStreamIndex() const {
     return mAudioStreamIndex;
 }
 
-int MediaSource::getVideoStreamIndex(){
+int MediaSource::getVideoStreamIndex() const {
     return mVideoStreamIndex;
 }
 
