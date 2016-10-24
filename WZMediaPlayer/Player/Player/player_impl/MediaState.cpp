@@ -53,7 +53,7 @@ void MediaState::synchronize(int64_t pts, std::atomic_bool& stopped){
             }
         }
     }else {
-        auto currentClock = std::chrono::system_clock::now();
+        auto currentClock = std::chrono::steady_clock::now();
         auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentClock - mLastClock);
         int64_t ptsDuration = pts - mLastVideoPTS;
         int64_t delay = ptsDuration - elapsedTime.count();

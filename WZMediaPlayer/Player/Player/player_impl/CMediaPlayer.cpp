@@ -30,10 +30,10 @@ CMediaPlayer::~CMediaPlayer(){
 }
 
 void CMediaPlayer::start(){
-    std::cout << "Player starts.\n";
+    log("Player starts.");
     if (!mStarted){
         if (PlayerState::OK != prepare()){
-            std::cout << "Failed to start playing because of unsuccessful player preparing.\n";
+            log("Failed to start playing because of unsuccessful player preparing.");
             return;
         }
         startDecoding();
@@ -42,7 +42,7 @@ void CMediaPlayer::start(){
 }
 
 PlayerState CMediaPlayer::prepare(){
-    std::cout << "Player prepared.\n";
+    log("Player prepared.");
     PlayerState result = PlayerState::ERROR;
     if (!mPrepared){
         result = prepareMediaSource();
@@ -65,7 +65,7 @@ void CMediaPlayer::stop(){
         mAudioDecoder->stop();
         mVideoDecoder->stop();
         mStarted = false;
-        std::cout << "Player stopped.\n";
+        log("Player stopped.");
     }
 }
 
@@ -74,7 +74,7 @@ void CMediaPlayer::pause(){
         mAudioDecoder->pause();
         mVideoDecoder->pause();
         mPaused = true;
-        std::cout << "Player paused.\n";
+        log("Player paused.");
     }
 }
 
@@ -83,7 +83,7 @@ void CMediaPlayer::resume(){
         mAudioDecoder->resume();
         mVideoDecoder->resume();
         mPaused = false;
-        std::cout << "Player resumed.\n";
+        log("Player resumed.");
     }
 }
 
@@ -119,7 +119,7 @@ PlayerState CMediaPlayer::prepareMediaSource(){
         mMediaSource = std::shared_ptr<MediaSource>(new MediaSource(mUrl));
         return mMediaSource->prepare();
     } else {
-        std::cout << "Failed to prepare media source because of stopped state.\n";
+        log("Failed to prepare media source because of stopped state.");
         return PlayerState::STOPPED;
     }
 }
@@ -128,16 +128,16 @@ PlayerState CMediaPlayer::prepareMediaDecoder(){
     PlayerState result = PlayerState::ERROR;
     if (mStarted && mMediaSource){
         mMediaState = std::make_shared<MediaState>();
-        mAudioDecoder = std::shared_ptr<MediaDecoder>(new AudioDecoder(std::move(std::string("AudioDecoder")), AUDIO_PKT_COUNT_PER_SECOND, NON_FIRST_BUFFER_SECONDS, mMediaSource->getAudioStream(), mMediaState));
-        mVideoDecoder = std::shared_ptr<MediaDecoder>(new VideoDecoder(std::move("VideoDecoder"), VIDEO_PKT_COUNT_PER_SECOND, NON_FIRST_BUFFER_SECONDS, mMediaSource->getVideoStream(), mMediaState));
+        mAudioDecoder = std::shared_ptr<MediaDecoder>(new AudioDecoder(AUDIO_PKT_COUNT_PER_SECOND, NON_FIRST_BUFFER_SECONDS, mMediaSource->getAudioStream(), mMediaState));
+        mVideoDecoder = std::shared_ptr<MediaDecoder>(new VideoDecoder(VIDEO_PKT_COUNT_PER_SECOND, NON_FIRST_BUFFER_SECONDS, mMediaSource->getVideoStream(), mMediaState));
         mMediaState->setAudioClockPtr(mAudioDecoder->getAudioClockPtr());
         result = PlayerState::OK;
     } else {
         if (!mStarted){
-            std::cout << "Failed to prepare media decoder because of stopped state.\n";
+            log("Failed to prepare media decoder because of stopped state.");
             result = PlayerState::STOPPED;
         } else if (!mMediaSource){
-            std::cout << "Failed to prepare media decoder because of unprepared media source.\n";
+            log("Failed to prepare media decoder because of unprepared media source.");
             result = PlayerState::ERROR;
         }
     }
@@ -155,7 +155,7 @@ void CMediaPlayer::readAndEnqueuePacket(){
             }
             case PlayerState::END_OF_FILE:{
                 mStreamEnd = true;
-                std::cout << "End of file.\n";
+                log("End of file.");
                 break;
             }
             case PlayerState::STOPPED:{

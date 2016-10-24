@@ -25,10 +25,12 @@ public:
     
 private:
     virtual std::string toString() const;
+    void printCurrentTimeAndClassname() const;
     template <typename T, typename... Args>
     void logImpl(const T& t, Args... args);
     template <typename T>
     void logImpl(const T& t);
+    std::mutex mMutexForLog;
 };
 
 #endif /* MediaLog_hpp */
