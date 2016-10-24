@@ -35,6 +35,7 @@ public:
 private:
     void updateAudioClock();
     void updateVideoClock(int64_t pts);
+    int updateReferenceClock(int64_t pts);
     
 public:
     
