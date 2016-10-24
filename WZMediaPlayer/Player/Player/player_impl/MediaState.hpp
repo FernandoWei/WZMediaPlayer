@@ -10,13 +10,14 @@
 #define MediaState_hpp
 
 #include "CommonInclude.h"
+#include "MediaLog.hpp"
 
 const uint32_t kMaxSyncDelay = 125;
 const uint32_t kMinSyncDelay = -45;
 const uint32_t kMaxSyncSleep = 300;
 const uint32_t kMinSyncSleep = 10;
 
-class MediaState {
+class MediaState : public MediaLog {
 public:
     MediaState();
     MediaState(const MediaState& state) = delete;
@@ -27,7 +28,7 @@ public:
     
 public:
     void synchronize(int64_t pts, std::atomic_bool& stopped);
-    void setAudioClockPtr(uint32_t* clock);
+    void setAudioClockPtr(int64_t* clock);
     DiscardFrameType getCurrentDiscardState();
     void setAudioReady(bool yes);
     void setVideoReady(bool yes);
@@ -35,21 +36,24 @@ public:
 private:
     void updateAudioClock();
     void updateVideoClock(int64_t pts);
-    int updateReferenceClock(int64_t pts);
+    int64_t updateReferenceClock(int64_t pts);
+    std::string toString() const;
     
 public:
     
 private:
-    uint32_t* mAudioClockPtr;
-    uint32_t mAudioClock;
-    uint32_t mVideoClock;
+    int64_t* mAudioClockPtr;
+    int64_t mAudioClock;
+    int64_t mVideoClock;
     DiscardFrameType mDiscardFrameType;
     
     bool mVideoReady;
     bool mAudioReady;
+    bool mFirst;
     
     int64_t mLastVideoPTS;
     std::chrono::steady_clock::time_point mLastClock;
+    std::chrono::steady_clock::time_point mCurrentClock;
 };
 
 #endif /* MediaState_hpp */

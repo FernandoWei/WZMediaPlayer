@@ -11,7 +11,6 @@
 
 #include "CommonInclude.h"
 #include "MediaState.hpp"
-#include "MediaLog.hpp"
 
 class MediaDecoder : public MediaLog{
     
@@ -35,7 +34,7 @@ public:
     bool virtual prepare();
     PlayerState virtual decode(AVPacket* pkt);
     void virtual flush();
-    virtual uint32_t* getAudioClockPtr();
+    virtual int64_t* getAudioClockPtr();
     virtual std::string toString() const;
     
 private:

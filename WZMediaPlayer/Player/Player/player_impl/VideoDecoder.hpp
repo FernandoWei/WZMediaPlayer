@@ -9,8 +9,8 @@
 #ifndef VideoDecoder_hpp
 #define VideoDecoder_hpp
 
-#include "MediaDecoder.hpp"
 #include <videotoolbox/VideoToolbox.h>
+#include "MediaDecoder.hpp"
 
 #define MAX_DATA_SIZE 10485760  //10 MB
 #define MAX_PKT_COUNT 200  //默认最大gop长度

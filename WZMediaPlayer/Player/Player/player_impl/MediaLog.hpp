@@ -8,8 +8,9 @@
 
 #ifndef MediaLog_hpp
 #define MediaLog_hpp
-
-#include "CommonInclude.h"
+#include <string>
+#include <thread>
+#include <iostream>
 
 class MediaLog {
     MediaLog(const MediaLog& log) = delete;
@@ -19,8 +20,8 @@ class MediaLog {
     
 public:
     MediaLog();
-    virtual ~MediaLog();
-    template <typename T, typename...Args>
+    virtual ~MediaLog(){}
+    template <typename T, typename... Args>
     void log(const T& t, Args... args);
     
 private:
@@ -30,7 +31,7 @@ private:
     void logImpl(const T& t, Args... args);
     template <typename T>
     void logImpl(const T& t);
-    std::mutex mMutexForLog;
+    std::mutex mMutex;
 };
 
 #endif /* MediaLog_hpp */

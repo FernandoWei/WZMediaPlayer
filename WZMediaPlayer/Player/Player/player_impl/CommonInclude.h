@@ -18,6 +18,8 @@
 #include <array>
 #include <list>
 
+#include "MediaLog.hpp"
+
 extern "C" {
 #include <libavutil/avutil.h>
 #include <libavcodec/avcodec.h>

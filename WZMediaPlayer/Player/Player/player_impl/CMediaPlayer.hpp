@@ -12,16 +12,10 @@
 
 
 #include "IMediaPlayer.hpp"
-#include "MediaLog.hpp"
 #include "MediaSource.hpp"
 #include "AudioDecoder.hpp"
 #include "VideoDecoder.hpp"
 #include "CommonInclude.h"
-
-class AudioDecoder;
-class VideoDecoder;
-
-
 
 class CMediaPlayer : public IMediaPlayer, public MediaLog {
     

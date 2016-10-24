@@ -25,7 +25,7 @@ mMediaState(state)
 }
 
 MediaDecoder::~MediaDecoder(){
-    log("desconstruct.");
+    log("destruct.");
     clearPktQueue();
 }
 
@@ -151,7 +151,7 @@ bool MediaDecoder::prepare(){
     return true;
 }
 
-uint32_t* MediaDecoder::getAudioClockPtr(){
+int64_t* MediaDecoder::getAudioClockPtr(){
     return nullptr;
 }
 

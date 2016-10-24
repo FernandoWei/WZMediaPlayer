@@ -186,7 +186,7 @@ void AudioDecoder::getVolume(float* volume){
     *volume = mVolume;
 }
 
-uint32_t* AudioDecoder::getAudioClockPtr(){
+int64_t* AudioDecoder::getAudioClockPtr(){
     return &mCurrentAudioClock;
 }
 

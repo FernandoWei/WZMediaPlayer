@@ -9,7 +9,8 @@
 #include "MediaLog.hpp"
 #include <iomanip>
 
-MediaLog::MediaLog():mMutexForLog(){}
+
+MediaLog::MediaLog():mMutex(){}
 
 template <typename T>
 void MediaLog::logImpl(const T& t){
@@ -24,7 +25,7 @@ void MediaLog::logImpl(const T& t, Args... args){
 
 template <typename T, typename... Args>
 void MediaLog::log(const T& t, Args... args){
-    std::lock_guard<std::mutex> guard(mMutexForLog);
+    std::lock_guard<std::mutex> guard(mMutex);
     printCurrentTimeAndClassname();
     logImpl(t, args...);
 }

@@ -9,8 +9,8 @@
 #ifndef AudioDecoder_hpp
 #define AudioDecoder_hpp
 
-#include "MediaDecoder.hpp"
 #include <AudioToolbox/AudioToolbox.h>
+#include "MediaDecoder.hpp"
 
 const unsigned int kNumAQBufs = 3;
 const unsigned int kAACSamplesPerPacket = 1024;
@@ -24,7 +24,7 @@ public:
 public:
     void setVolume(float volume);
     void getVolume(float* volume);
-    uint32_t* getAudioClockPtr();
+    int64_t* getAudioClockPtr();
     
 protected:
     bool virtual prepare();
@@ -56,10 +56,10 @@ private:
     
 private:
     AudioQueueBufferRef mAudioQueueBuffer[kNumAQBufs];
-    uint32_t audioClock[kNumAQBufs] = {0};
+    int64_t audioClock[kNumAQBufs] = {0};
     bool inUse[kNumAQBufs] = {false, false, false};
     
-    uint32_t mCurrentAudioClock;
+    int64_t mCurrentAudioClock;
     AudioQueueRef mAudioQueue;
     bool mAudioQueueStarted;
     int mCurrentAvailableBuffIndex;

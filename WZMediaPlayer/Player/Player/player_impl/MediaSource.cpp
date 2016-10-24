@@ -70,7 +70,6 @@ PlayerState MediaSource::open(){
                     mAudioStreamIndex = mFormatCtx->streams[i]->index;
                     mAudioStream = mFormatCtx->streams[i];
                 }
-                
                 result = PlayerState::OK;
             }
         } else {
