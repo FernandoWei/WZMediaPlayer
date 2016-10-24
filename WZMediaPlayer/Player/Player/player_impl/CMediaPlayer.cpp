@@ -130,7 +130,6 @@ PlayerState CMediaPlayer::prepareMediaDecoder(){
         mMediaState = std::make_shared<MediaState>();
         mAudioDecoder = std::shared_ptr<MediaDecoder>(new AudioDecoder(AUDIO_PKT_COUNT_PER_SECOND, NON_FIRST_BUFFER_SECONDS, mMediaSource->getAudioStream(), mMediaState));
         mVideoDecoder = std::shared_ptr<MediaDecoder>(new VideoDecoder(VIDEO_PKT_COUNT_PER_SECOND, NON_FIRST_BUFFER_SECONDS, mMediaSource->getVideoStream(), mMediaState));
-        mMediaState->setAudioClockPtr(mAudioDecoder->getAudioClockPtr());
         result = PlayerState::OK;
     } else {
         if (!mStarted){

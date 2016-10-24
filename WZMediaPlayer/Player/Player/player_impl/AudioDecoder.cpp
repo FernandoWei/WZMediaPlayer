@@ -17,6 +17,7 @@ mCurrentAudioClock(0),
 mAudioQueueStarted(false),
 mVolume(1.0)
 {
+    mMediaState->setAudioClockPtr(getAudioClockPtr());
 }
 
 AudioDecoder::~AudioDecoder(){
