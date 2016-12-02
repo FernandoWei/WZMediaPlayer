@@ -9,8 +9,12 @@
 #ifndef AudioDecoder_hpp
 #define AudioDecoder_hpp
 
-#include <AudioToolbox/AudioToolbox.h>
 #include "MediaDecoder.hpp"
+#include <AudioToolbox/AudioToolbox.h>
+
+
+namespace WZ {
+    namespace MediaPlayer {
 
 const unsigned int kNumAQBufs = 3;
 const unsigned int kAACSamplesPerPacket = 1024;
@@ -28,9 +32,11 @@ public:
     
 protected:
     bool virtual prepare();
-    PlayerState virtual decode(AVPacket* pkt);
+    Utility::PlayerState virtual decode(AVPacket* pkt);
     void virtual flush();
-    virtual std::string toString() const;
+    
+private:
+    std::string virtual getClassName() const {return std::string("AudioDecoder");}
     
 private:
     bool prepareCodecParameters();
@@ -44,7 +50,7 @@ private:
     void audioQueueFlush();
     void audioQueueStop(bool didStopImmediately);
     void audioQueueDispose();
-    PlayerState enqueueAudioPacket(const AVPacket* pkt);
+    Utility::PlayerState enqueueAudioPacket(const AVPacket* pkt);
     
 private:
     static void MyAudioQueueOutputCallback(void* inClientData,
@@ -76,5 +82,6 @@ private:
     AVSampleFormat mSampleFormat;
     
 };
+    }}
 
 #endif /* AudioDecoder_hpp */

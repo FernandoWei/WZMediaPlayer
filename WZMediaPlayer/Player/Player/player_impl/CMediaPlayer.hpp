@@ -9,15 +9,16 @@
 #ifndef CMediaPlayer_hpp
 #define CMediaPlayer_hpp
 
-
-
 #include "IMediaPlayer.hpp"
 #include "MediaSource.hpp"
 #include "AudioDecoder.hpp"
 #include "VideoDecoder.hpp"
-#include "CommonInclude.h"
 
-class CMediaPlayer : public IMediaPlayer, public MediaLog {
+
+namespace WZ {
+    namespace MediaPlayer {
+
+class CMediaPlayer : public IMediaPlayer, public Utility::WZObject {
     
 public:
     virtual ~CMediaPlayer();
@@ -35,14 +36,14 @@ private:
     void virtual pause();
     void virtual resume();
     uint64_t virtual getCurrentPosition();
-    std::string virtual toString() const;
+    std::string virtual getClassName() const {return std::string("CMediaPlayer");}
     
 private:
-    PlayerState prepare();
+    Utility::PlayerState prepare();
     void startDecoding();
-    PlayerState prepareTasks();
-    PlayerState prepareMediaSource();
-    PlayerState prepareMediaDecoder();
+    Utility::PlayerState prepareTasks();
+    Utility::PlayerState prepareMediaSource();
+    Utility::PlayerState prepareMediaDecoder();
     void readAndEnqueuePacket();
     void demuxerPacket();
     void enqueuePacket(AVPacket* packet);
@@ -64,9 +65,9 @@ private:
     std::shared_ptr<MediaDecoder> mAudioDecoder;
     std::shared_ptr<MediaDecoder> mVideoDecoder;
     std::shared_ptr<MediaState> mMediaState;
-    
-    
-    
 };
+        
+}
+}
 
 #endif /* CMediaPlayer_hpp */

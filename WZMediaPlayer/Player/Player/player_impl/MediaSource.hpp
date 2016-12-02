@@ -9,9 +9,12 @@
 #ifndef MediaSource_hpp
 #define MediaSource_hpp
 
-#include "CommonInclude.h"
+#include "utility.hpp"
 
-class MediaSource {
+namespace WZ {
+    namespace MediaPlayer {
+
+class MediaSource : public Utility::WZObject {
 public:
     MediaSource() = delete;
     MediaSource(const MediaSource& source) = delete;
@@ -22,18 +25,21 @@ public:
     ~MediaSource();
     
 public:
-    PlayerState prepare();
+    Utility::PlayerState prepare();
     void stop();
-    PlayerState read(AVPacket* packet);
+    Utility::PlayerState read(AVPacket* packet);
     int getVideoStreamIndex() const;
     int getAudioStreamIndex() const;
     AVStream* getAudioStream() const;
     AVStream* getVideoStream() const;
     
+private:
+    inline std::string virtual getClassName() const {return std::string("MediaSource");}
+    
     
 private:
     void init();
-    PlayerState open();
+    Utility::PlayerState open();
     void close();
     
     static int didStopped(void* thiz);
@@ -48,5 +54,7 @@ private:
     std::string mUrl;
     std::atomic_bool mStopped;
 };
+        
+    }}
 
 #endif /* MediaSource_hpp */

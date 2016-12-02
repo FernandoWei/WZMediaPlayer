@@ -8,30 +8,38 @@
 
 #ifndef MediaLog_hpp
 #define MediaLog_hpp
+
+#include "WZObject.hpp"
+
 #include <string>
 #include <thread>
 #include <iostream>
 
-class MediaLog {
-    MediaLog(const MediaLog& log) = delete;
-    MediaLog(MediaLog&& log) = delete;
-    MediaLog& operator=(const MediaLog& log) = delete;
-    MediaLog& operator=(MediaLog&& log) = delete;
-    
-public:
-    MediaLog();
-    virtual ~MediaLog(){}
-    template <typename T, typename... Args>
-    void log(const T& t, Args... args);
-    
-private:
-    virtual std::string toString() const;
-    void printCurrentTimeAndClassname() const;
-    template <typename T, typename... Args>
-    void logImpl(const T& t, Args... args);
-    template <typename T>
-    void logImpl(const T& t);
-    std::mutex mMutex;
-};
+
+
+namespace WZ {
+    namespace Utility {
+        
+        class WZObject;
+        
+        class MediaLog {
+            MediaLog(const MediaLog& log) = delete;
+            MediaLog(MediaLog&& log) = delete;
+            MediaLog& operator=(const MediaLog& log) = delete;
+            MediaLog& operator=(MediaLog&& log) = delete;
+            
+        public:
+            MediaLog();
+            ~MediaLog(){}
+            void log(std::shared_ptr<WZ::Utility::WZObject> mediaObject, const char* format, va_list va);
+            
+        private:
+            void printCurrentTimeAndClassname(std::shared_ptr<WZ::Utility::WZObject> mediaObject) const;
+            
+        private:
+            std::mutex mMutex;
+        };
+    }
+}
 
 #endif /* MediaLog_hpp */
